@@ -49,16 +49,16 @@ const Index = () => {
         />
       )}
 
-      {/* Layout: orbs left half, menu right */}
-      <div className="flex-1 flex">
-        {/* Orbs — left half */}
-        <div className="w-1/2 h-full relative">
-          <PS2Orbs />
-        </div>
+      {/* Center content — orbs and menu side by side, close together */}
+      <div className="flex-1 flex items-center justify-center">
+        <div className="flex items-center gap-6 md:gap-10">
+          {/* Orbs */}
+          <div className="relative w-40 h-36 md:w-52 md:h-44">
+            <PS2Orbs />
+          </div>
 
-        {/* Menu — right half, vertically centered */}
-        <div className="w-1/2 flex items-center pl-4 md:pl-8 relative z-10">
-          <div className="flex flex-col gap-1">
+          {/* Menu text */}
+          <div className="flex flex-col gap-1 relative z-10">
             {menuItems.map((item, index) => (
               <button
                 key={item.id}
@@ -66,7 +66,7 @@ const Index = () => {
                   setSelectedIndex(index);
                   navigate(item.path);
                 }}
-                className="text-left focus:outline-none py-1"
+                className="text-left focus:outline-none py-0.5"
               >
                 <motion.span
                   className={`block font-body tracking-wider transition-all ${
