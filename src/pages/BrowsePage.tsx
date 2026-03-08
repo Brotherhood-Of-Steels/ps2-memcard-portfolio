@@ -39,17 +39,17 @@ const BrowsePage = () => {
   return (
     <main className="min-h-screen bg-ps2-gray flex flex-col" role="application" aria-label="Browse Memory Card">
       {/* Header */}
-      <header className="flex items-center justify-between px-6 py-4">
+      <header className="flex items-center justify-between px-10 pt-6 pb-2">
         <div className="flex items-center gap-3">
-          <div className="w-12 h-8 bg-[hsl(220,15%,25%)] rounded-sm" aria-hidden="true" />
-          <div className="font-body text-ps2-menu-fg">
-            <h1 className="text-sm font-bold">Memory Card (PS2)/1</h1>
-            <p className="text-xs text-ps2-menu-fg/70">1,035 KB Free</p>
+          <div className="w-10 h-7 bg-[hsl(220,15%,25%)] rounded-sm" aria-hidden="true" />
+          <div className="font-body text-ps2-menu-fg leading-tight">
+            <p className="text-base font-bold">Memory Card (PS2)/1</p>
+            <p className="text-sm text-ps2-menu-fg/80">1,035 KB Free</p>
           </div>
         </div>
-        <div className="font-body text-ps2-menu-fg text-right">
-          <p className="text-sm font-bold">Your System</p>
-          <p className="text-sm font-bold">Configuration</p>
+        <div className="font-body text-ps2-menu-fg text-right leading-tight">
+          <p className="text-base font-bold">Your System</p>
+          <p className="text-base font-bold">Configuration</p>
         </div>
       </header>
 
