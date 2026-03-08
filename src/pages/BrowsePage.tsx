@@ -129,19 +129,8 @@ const BrowsePage = () => {
         </div>
       </section>
 
-      {/* Down arrow */}
-      <div className="flex justify-center py-[0.5vh]">
-        <motion.div
-          className="text-primary text-xl"
-          animate={{ y: [0, 5, 0] }}
-          transition={{ duration: 1, repeat: Infinity }}
-        >
-          ▼
-        </motion.div>
-      </div>
-
       {/* Bottom bar */}
-      <nav className="flex items-center justify-center gap-20 px-10 py-[2.5vh] font-body">
+      <nav className="flex items-center justify-center gap-20 px-10 pt-4 pb-[4vh] font-body">
         <button onClick={handleEnter} className="flex items-center gap-2 text-ps2-menu-fg text-base tracking-wide hover:text-primary transition-colors">
           <span className="font-bold text-lg">✕</span>
           <span className="font-bold">Enter</span>
