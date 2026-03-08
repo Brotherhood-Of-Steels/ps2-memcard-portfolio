@@ -42,7 +42,7 @@ const BrowsePage = () => {
       <header className="flex items-center justify-between px-6 py-4">
         <div className="flex items-center gap-3">
           <div className="w-12 h-8 bg-[hsl(220,15%,25%)] rounded-sm" aria-hidden="true" />
-          <div className="font-ps2 text-ps2-menu-fg">
+          <div className="font-body text-ps2-menu-fg">
             <h1 className="text-sm font-bold">Memory Card (PS2)/1</h1>
             <p className="text-xs text-ps2-menu-fg/70">1,035 KB Free</p>
           </div>
