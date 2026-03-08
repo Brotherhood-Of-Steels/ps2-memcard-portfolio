@@ -35,7 +35,7 @@ type OrbitingOrbProps = {
   targetY: React.MutableRefObject<number>;
 };
 
-function OrbitingOrb({ glowTex, index }: OrbitingOrbProps) {
+function OrbitingOrb({ glowTex, index, targetY }: OrbitingOrbProps) {
   const ref = useRef<THREE.Group>(null!);
   const trailRefs = useRef<THREE.Sprite[]>([]);
   const posHistory = useRef<THREE.Vector3[]>([]);
