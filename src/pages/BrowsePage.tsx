@@ -42,11 +42,12 @@ const BrowsePage = () => {
   return (
     <main className="h-screen bg-ps2-gray flex flex-col" role="application" aria-label="Browse Memory Card">
       {/* Header */}
-      <header className="flex items-center justify-end px-[5%] pt-[7vh] pb-[2.5vh]">
-        <div className="font-body text-ps2-menu-fg text-right leading-tight">
-          <p className="text-base font-bold">Your System</p>
-          <p className="text-base font-bold">Configuration</p>
-        </div>
+      <header className="flex items-center px-[5%] pt-[7vh] pb-[2.5vh]">
+        <nav className="font-body text-ps2-menu-fg text-sm tracking-wide flex items-center gap-2">
+          <button onClick={handleBack} className="hover:text-primary transition-colors">Home</button>
+          <span className="text-ps2-menu-fg/50">›</span>
+          <span className="font-bold">Browser</span>
+        </nav>
       </header>
 
       {/* Items Grid */}
