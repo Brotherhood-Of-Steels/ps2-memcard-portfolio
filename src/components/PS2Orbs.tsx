@@ -158,8 +158,8 @@ function OrbSystem() {
       {basePositions.map((pos, i) => (
         <DriftingOrb key={i} basePos={pos} glowTex={glowTex} seed={i + 1} sharedPositions={sharedPositions} index={i} />
       ))}
-      <EffectComposer>
-        <Bloom intensity={1.5} luminanceThreshold={0.08} luminanceSmoothing={0.9} mipmapBlur />
+      <EffectComposer frameBufferType={THREE.HalfFloatType}>
+        <Bloom intensity={1.5} luminanceThreshold={0.08} luminanceSmoothing={0.9} mipmapBlur blendFunction={BlendFunction.ADD} />
       </EffectComposer>
     </>
   );
