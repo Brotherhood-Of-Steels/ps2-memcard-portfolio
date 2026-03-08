@@ -38,7 +38,7 @@ function OrbitingOrb({ glowTex, index }: OrbitingOrbProps) {
   const posHistory = useRef<THREE.Vector3[]>([]);
 
   const phase = useMemo(() => (index / ORB_COUNT) * Math.PI * 2, [index]);
-  const speed = useMemo(() => 1.05 + index * 0.02, [index]);
+  const speed = useMemo(() => BASE_SPEED + index * 0.03, [index]);
 
   const trailSprites = useMemo(() => {
     const sprites: THREE.Sprite[] = [];
@@ -67,10 +67,19 @@ function OrbitingOrb({ glowTex, index }: OrbitingOrbProps) {
     const t = clock.getElapsedTime();
     const angle = t * speed + phase;
 
+    // Inline alignment pattern: periodically all orbs converge to a line
+    // Uses a sine wave that periodically flattens the Y axis
+    const alignCycle = Math.sin(t * 0.4) * 0.5 + 0.5; // 0..1, slow cycle
+    const alignStrength = Math.pow(alignCycle, 4); // sharp peaks = inline moments
+
     const radius = 1.55 + Math.sin(t * 0.7 + index * 0.9) * 0.12;
-    const x = Math.cos(angle) * radius + Math.sin(t * 0.9 + index) * 0.08;
-    const y = Math.sin(angle) * (1.18 + Math.cos(t * 0.8 + index) * 0.1) + Math.cos(t * 0.6 + index) * 0.05;
+    const baseX = Math.cos(angle) * radius + Math.sin(t * 0.9 + index) * 0.08;
+    const baseY = Math.sin(angle) * (1.18 + Math.cos(t * 0.8 + index) * 0.1) + Math.cos(t * 0.6 + index) * 0.05;
     const z = Math.sin(angle * 1.8 + t * 0.7 + index) * 0.16;
+
+    // When alignStrength is high, flatten Y toward 0 (inline horizontal)
+    const x = baseX;
+    const y = baseY * (1 - alignStrength * 0.92);
 
     ref.current.position.set(x, y, z);
 
