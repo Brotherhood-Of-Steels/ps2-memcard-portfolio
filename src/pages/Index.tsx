@@ -10,10 +10,14 @@ const menuItems = [
 
 const Index = () => {
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const [enterFlash, setEnterFlash] = useState(false);
   const navigate = useNavigate();
 
   const handleEnter = () => {
-    navigate(menuItems[selectedIndex].path);
+    setEnterFlash(true);
+    setTimeout(() => {
+      navigate(menuItems[selectedIndex].path);
+    }, 300);
   };
 
   useEffect(() => {
@@ -35,16 +39,26 @@ const Index = () => {
       <div className="ps2-crt-overlay" />
       <div className="ps2-scanline" />
 
-      {/* Center content — orbs left, text right, like the PS2 BIOS */}
-      <div className="flex-1 flex items-center justify-center">
-        <div className="flex items-center gap-8 md:gap-12">
-          {/* Orbs */}
-          <div className="relative w-44 h-36 md:w-52 md:h-44">
-            <PS2Orbs />
-          </div>
+      {/* Enter flash overlay */}
+      {enterFlash && (
+        <motion.div
+          className="fixed inset-0 z-50 bg-foreground"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: [0, 0.6, 0] }}
+          transition={{ duration: 0.3 }}
+        />
+      )}
 
-          {/* Menu text */}
-          <div className="flex flex-col gap-0">
+      {/* Layout: orbs left half, menu right */}
+      <div className="flex-1 flex">
+        {/* Orbs — left half */}
+        <div className="w-1/2 h-full relative">
+          <PS2Orbs />
+        </div>
+
+        {/* Menu — right half, vertically centered */}
+        <div className="w-1/2 flex items-center pl-4 md:pl-8 relative z-10">
+          <div className="flex flex-col gap-1">
             {menuItems.map((item, index) => (
               <button
                 key={item.id}
@@ -52,7 +66,7 @@ const Index = () => {
                   setSelectedIndex(index);
                   navigate(item.path);
                 }}
-                className="text-left focus:outline-none py-0.5"
+                className="text-left focus:outline-none py-1"
               >
                 <motion.span
                   className={`block font-body tracking-wider transition-all ${
@@ -74,7 +88,7 @@ const Index = () => {
         </div>
       </div>
 
-      {/* Bottom bar — centered like reference */}
+      {/* Bottom bar — centered */}
       <motion.nav
         className="flex items-center justify-center gap-16 px-8 py-5"
         initial={{ y: 30, opacity: 0 }}
@@ -88,7 +102,6 @@ const Index = () => {
           </div>
           <span className="font-body text-sm tracking-wider text-foreground">Select</span>
         </div>
-
         <button
           onClick={handleEnter}
           className="font-body text-sm tracking-wider text-foreground hover:text-primary transition-colors"
