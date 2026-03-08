@@ -122,19 +122,33 @@ function OrbitingOrb({ glowTex, index, targetY }: OrbitingOrbProps) {
   );
 }
 
-function OrbSystem() {
+function OrbSystem({ selectedIndex }: { selectedIndex: number }) {
   const glowTex = useMemo(() => makeGlowTexture(), []);
+  const targetY = useRef(0);
+  const currentY = useRef(0);
+
+  // Map selectedIndex to Y offset in 3D space
+  // Index 0 (Browser) = positive Y (up), Index 1 (Games) = negative Y (down)
+  useFrame(() => {
+    const desiredY = selectedIndex === 0 ? 0.6 : -0.6;
+    currentY.current = MathUtils.lerp(currentY.current, desiredY, 0.04);
+    targetY.current = currentY.current;
+  });
 
   return (
     <>
       {Array.from({ length: ORB_COUNT }).map((_, index) => (
-        <OrbitingOrb key={index} glowTex={glowTex} index={index} />
+        <OrbitingOrb key={index} glowTex={glowTex} index={index} targetY={targetY} />
       ))}
     </>
   );
 }
 
-const PS2Orbs = () => {
+type PS2OrbsProps = {
+  selectedIndex?: number;
+};
+
+const PS2Orbs = ({ selectedIndex = 0 }: PS2OrbsProps) => {
   return (
     <div className="relative w-full h-full pointer-events-none">
       <Canvas
@@ -145,7 +159,7 @@ const PS2Orbs = () => {
         }}
         style={{ background: "transparent" }}
       >
-        <OrbSystem />
+        <OrbSystem selectedIndex={selectedIndex} />
       </Canvas>
     </div>
   );
