@@ -39,7 +39,7 @@ const BrowsePage = () => {
   return (
     <main className="h-screen bg-ps2-gray flex flex-col" role="application" aria-label="Browse Memory Card">
       {/* Header */}
-      <header className="flex items-center justify-between px-[5%] py-[2.5vh]">
+      <header className="flex items-center justify-between px-[5%] pt-[5vh] pb-[2.5vh]">
         <div className="flex items-center gap-3">
           <div className="w-10 h-7 bg-[hsl(220,15%,25%)] rounded-sm" aria-hidden="true" />
           <div className="font-body text-ps2-menu-fg leading-tight">
