@@ -19,11 +19,12 @@ const BrowsePage = () => {
   const handleEnter = () => {
     const item = browseItems[selectedIndex];
     if (item.action === "download-cv") {
-      // Trigger CV download
       const link = document.createElement("a");
       link.href = "/cv.pdf";
       link.download = "CV.pdf";
       link.click();
+    } else if (item.action === "link" && item.url) {
+      window.open(item.url, "_blank");
     }
   };
 
