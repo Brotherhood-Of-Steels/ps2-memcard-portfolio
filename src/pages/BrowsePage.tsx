@@ -130,9 +130,9 @@ const BrowsePage = () => {
       </section>
 
       {/* Down arrow */}
-      <div className="flex justify-center mb-4">
+      <div className="flex justify-center pb-2">
         <motion.div
-          className="text-primary text-2xl"
+          className="text-primary text-xl"
           animate={{ y: [0, 5, 0] }}
           transition={{ duration: 1, repeat: Infinity }}
         >
@@ -140,13 +140,21 @@ const BrowsePage = () => {
         </motion.div>
       </div>
 
-      <PS2BottomBar
-        actions={[
-          { icon: "✕", label: "Enter", onClick: handleEnter },
-          { icon: "○", label: "Back", onClick: handleBack },
-          { icon: "△", label: "Options" },
-        ]}
-      />
+      {/* Bottom bar — inline, not fixed */}
+      <nav className="flex items-center justify-center gap-20 px-10 py-4 font-body">
+        <button onClick={handleEnter} className="flex items-center gap-2 text-ps2-menu-fg text-base tracking-wide hover:text-primary transition-colors">
+          <span className="font-bold text-lg">✕</span>
+          <span className="font-bold">Enter</span>
+        </button>
+        <button onClick={handleBack} className="flex items-center gap-2 text-ps2-menu-fg text-base tracking-wide hover:text-primary transition-colors">
+          <span className="font-bold text-lg">○</span>
+          <span className="font-bold">Back</span>
+        </button>
+        <span className="flex items-center gap-2 text-ps2-menu-fg text-base tracking-wide">
+          <span className="font-bold text-lg">△</span>
+          <span className="font-bold">Options</span>
+        </span>
+      </nav>
     </main>
   );
 };
