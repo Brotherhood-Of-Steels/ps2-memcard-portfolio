@@ -1,27 +1,23 @@
 import { motion } from "framer-motion";
 
 const orbs = [
-  { radius: 140, angle: 0, size: 6, speed: 28, glow: 18 },
-  { radius: 180, angle: 45, size: 8, speed: 34, glow: 24 },
-  { radius: 110, angle: 90, size: 5, speed: 22, glow: 14 },
-  { radius: 200, angle: 135, size: 7, speed: 40, glow: 20 },
-  { radius: 160, angle: 180, size: 4, speed: 26, glow: 12 },
-  { radius: 220, angle: 225, size: 6, speed: 36, glow: 16 },
-  { radius: 130, angle: 270, size: 5, speed: 30, glow: 14 },
-  { radius: 190, angle: 315, size: 7, speed: 32, glow: 22 },
-  { radius: 240, angle: 60, size: 4, speed: 44, glow: 10 },
-  { radius: 170, angle: 150, size: 6, speed: 38, glow: 18 },
-  { radius: 250, angle: 200, size: 3, speed: 48, glow: 8 },
-  { radius: 150, angle: 280, size: 5, speed: 25, glow: 14 },
+  { radius: 80, angle: 0, size: 8, speed: 20, glow: 22 },
+  { radius: 85, angle: 45, size: 9, speed: 20, glow: 26 },
+  { radius: 75, angle: 90, size: 7, speed: 20, glow: 20 },
+  { radius: 90, angle: 135, size: 8, speed: 20, glow: 24 },
+  { radius: 78, angle: 180, size: 7, speed: 20, glow: 18 },
+  { radius: 88, angle: 225, size: 9, speed: 20, glow: 26 },
+  { radius: 82, angle: 270, size: 8, speed: 20, glow: 22 },
+  { radius: 86, angle: 315, size: 7, speed: 20, glow: 20 },
 ];
 
 const PS2Orbs = () => {
   return (
-    <div className="absolute inset-0 pointer-events-none flex items-center justify-center">
+    <div className="relative w-full h-full pointer-events-none flex items-center justify-center">
       {orbs.map((orb, i) => {
         const startRad = (orb.angle * Math.PI) / 180;
         const cx = Math.cos(startRad) * orb.radius;
-        const cy = Math.sin(startRad) * orb.radius;
+        const cy = Math.sin(startRad) * orb.radius * 0.7;
 
         return (
           <motion.div
@@ -47,12 +43,12 @@ const PS2Orbs = () => {
               ],
               y: [
                 cy,
-                Math.sin(startRad + Math.PI / 2) * orb.radius,
-                Math.sin(startRad + Math.PI) * orb.radius,
-                Math.sin(startRad + (3 * Math.PI) / 2) * orb.radius,
+                Math.sin(startRad + Math.PI / 2) * orb.radius * 0.7,
+                Math.sin(startRad + Math.PI) * orb.radius * 0.7,
+                Math.sin(startRad + (3 * Math.PI) / 2) * orb.radius * 0.7,
                 cy,
               ],
-              opacity: [0.6, 0.9, 0.5, 0.8, 0.6],
+              opacity: [0.7, 1, 0.6, 0.9, 0.7],
             }}
             transition={{
               duration: orb.speed,
