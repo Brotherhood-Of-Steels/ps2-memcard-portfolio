@@ -86,7 +86,7 @@ function OrbitingOrb({ glowTex, index, targetY }: OrbitingOrbProps) {
 
     ref.current.position.set(x, y + targetY.current, z);
 
-    posHistory.current.unshift(new THREE.Vector3(x, y, z));
+    posHistory.current.unshift(new THREE.Vector3(x, y + targetY.current, z));
     if (posHistory.current.length > TRAIL_LENGTH * 2) {
       posHistory.current.length = TRAIL_LENGTH * 2;
     }
