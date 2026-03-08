@@ -67,20 +67,17 @@ function OrbitingOrb({ glowTex, index }: OrbitingOrbProps) {
     const t = clock.getElapsedTime();
     const angle = t * speed + phase;
 
-    // Inline alignment pattern
-    const alignCycle = Math.sin(t * 0.4) * 0.5 + 0.5;
-    const alignStrength = Math.pow(alignCycle, 4);
+    // Inline alignment pattern: periodically all orbs converge to a line
+    // Uses a sine wave that periodically flattens the Y axis
+    const alignCycle = Math.sin(t * 0.4) * 0.5 + 0.5; // 0..1, slow cycle
+    const alignStrength = Math.pow(alignCycle, 4); // sharp peaks = inline moments
 
-    // Wide elliptical orbit — stretches far right to pass through menu
-    const radiusX = 2.6 + Math.sin(t * 0.5 + index * 0.7) * 0.2;
-    const radiusY = 1.6 + Math.cos(t * 0.8 + index) * 0.12;
+    const radius = 2.2 + Math.sin(t * 0.7 + index * 0.9) * 0.15;
+    const baseX = Math.cos(angle) * radius + Math.sin(t * 0.9 + index) * 0.1;
+    const baseY = Math.sin(angle) * (1.5 + Math.cos(t * 0.8 + index) * 0.12) + Math.cos(t * 0.6 + index) * 0.06;
+    const z = Math.sin(angle * 1.8 + t * 0.7 + index) * 0.16;
 
-    const centerOffsetX = 0.8;
-
-    const baseX = Math.cos(angle) * radiusX + centerOffsetX + Math.sin(t * 0.9 + index) * 0.1;
-    const baseY = Math.sin(angle) * radiusY + Math.cos(t * 0.6 + index) * 0.06;
-    const z = Math.sin(angle * 1.8 + t * 0.7 + index) * 0.18;
-
+    // When alignStrength is high, flatten Y toward 0 (inline horizontal)
     const x = baseX;
     const y = baseY * (1 - alignStrength * 0.92);
 
@@ -138,7 +135,7 @@ const PS2Orbs = () => {
   return (
     <div className="relative w-full h-full pointer-events-none">
       <Canvas
-        camera={{ position: [0, 0, 7], fov: 55 }}
+        camera={{ position: [0, 0, 5.4], fov: 50 }}
         gl={{ alpha: true, antialias: true, premultipliedAlpha: true, toneMapping: THREE.NoToneMapping }}
         onCreated={({ gl }) => {
           gl.setClearColor(0x000000, 0);

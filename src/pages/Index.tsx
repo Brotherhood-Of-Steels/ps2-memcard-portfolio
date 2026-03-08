@@ -49,17 +49,15 @@ const Index = () => {
         />
       )}
 
-      {/* Center content — orbs left, menu right, orbs overflow to reach menu */}
+      {/* Center content — orbs and menu side by side, close together */}
       <div className="flex-1 flex items-center justify-center">
-        <div className="flex items-center gap-6 md:gap-10 relative">
-          {/* Orbs - positioned left but canvas overflows right to cover menu */}
-          <div className="relative w-52 h-48 md:w-64 md:h-56 overflow-visible">
-            <div className="absolute -inset-[200%] pointer-events-none">
-              <PS2Orbs />
-            </div>
+        <div className="flex items-center gap-6 md:gap-10">
+          {/* Orbs */}
+          <div className="relative w-52 h-48 md:w-64 md:h-56">
+            <PS2Orbs />
           </div>
 
-          {/* Menu text - on top of orbs */}
+          {/* Menu text */}
           <div className="flex flex-col gap-1 relative z-10">
             {menuItems.map((item, index) => (
               <button
