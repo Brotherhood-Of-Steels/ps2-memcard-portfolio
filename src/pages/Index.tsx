@@ -30,47 +30,44 @@ const Index = () => {
     <main
       className="relative min-h-screen bg-background overflow-hidden flex flex-col"
       role="application"
-      aria-label="PS2 Memory Card Browser"
+      aria-label="PS2 Menu"
     >
       <div className="ps2-crt-overlay" />
       <div className="ps2-scanline" />
 
-      {/* Center content */}
-      <div className="flex-1 flex items-center justify-center">
-        <div className="relative flex items-center gap-10 md:gap-14">
-          {/* Orbs */}
-          <div className="relative w-36 h-28 md:w-48 md:h-36">
-            <PS2Orbs />
-          </div>
+      {/* Orbs fill left/center area */}
+      <div className="absolute inset-0" style={{ right: "30%" }}>
+        <PS2Orbs />
+      </div>
 
-          {/* Menu */}
-          <div className="flex flex-col gap-0">
-            {menuItems.map((item, index) => (
-              <button
-                key={item.id}
-                onClick={() => {
-                  setSelectedIndex(index);
-                  navigate(item.path);
-                }}
-                className="text-left focus:outline-none py-1"
+      {/* Right-aligned menu */}
+      <div className="flex-1 flex items-center justify-end pr-12 md:pr-24 relative z-10">
+        <div className="flex flex-col gap-1">
+          {menuItems.map((item, index) => (
+            <button
+              key={item.id}
+              onClick={() => {
+                setSelectedIndex(index);
+                navigate(item.path);
+              }}
+              className="text-right focus:outline-none py-1"
+            >
+              <motion.span
+                className={`block font-body tracking-wider transition-all ${
+                  selectedIndex === index
+                    ? "text-foreground text-2xl md:text-3xl font-bold"
+                    : "text-muted-foreground text-lg md:text-xl"
+                }`}
+                animate={
+                  selectedIndex === index
+                    ? { textShadow: "0 0 20px hsl(210 100% 65% / 0.5)" }
+                    : { textShadow: "none" }
+                }
               >
-                <motion.span
-                  className={`block font-body tracking-wider transition-all ${
-                    selectedIndex === index
-                      ? "text-foreground text-2xl md:text-3xl font-bold"
-                      : "text-muted-foreground text-lg md:text-xl"
-                  }`}
-                  animate={
-                    selectedIndex === index
-                      ? { textShadow: "0 0 20px hsl(210 100% 65% / 0.5)" }
-                      : { textShadow: "none" }
-                  }
-                >
-                  {item.label}
-                </motion.span>
-              </button>
-            ))}
-          </div>
+                {item.label}
+              </motion.span>
+            </button>
+          ))}
         </div>
       </div>
 
@@ -81,7 +78,6 @@ const Index = () => {
         animate={{ y: 0, opacity: 1 }}
         transition={{ delay: 0.4 }}
       >
-        {/* Arrow keys indicator */}
         <div className="flex items-center gap-3">
           <div className="flex flex-col items-center gap-0.5">
             <span className="inline-flex items-center justify-center w-5 h-5 border border-foreground/60 rounded-sm text-[10px] text-foreground leading-none">▲</span>
@@ -89,8 +85,6 @@ const Index = () => {
           </div>
           <span className="font-body text-sm tracking-wider text-foreground">Select</span>
         </div>
-
-        {/* Enter */}
         <button
           onClick={handleEnter}
           className="font-body text-sm tracking-wider text-foreground hover:text-primary transition-colors"
