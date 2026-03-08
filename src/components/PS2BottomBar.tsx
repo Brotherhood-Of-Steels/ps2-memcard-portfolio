@@ -17,7 +17,7 @@ const PS2BottomBar = ({ actions }: PS2BottomBarProps) => {
         <button
           key={action.label}
           onClick={action.onClick}
-          className="flex items-center gap-3 text-foreground font-ps2 text-sm tracking-wider hover:text-primary transition-colors"
+          className="flex items-center gap-3 text-foreground font-body text-sm tracking-wider hover:text-primary transition-colors"
         >
           <span className="text-lg">{action.icon}</span>
           <span>{action.label}</span>

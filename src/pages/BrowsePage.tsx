@@ -42,12 +42,12 @@ const BrowsePage = () => {
       <header className="flex items-center justify-between px-6 py-4">
         <div className="flex items-center gap-3">
           <div className="w-12 h-8 bg-[hsl(220,15%,25%)] rounded-sm" aria-hidden="true" />
-          <div className="font-ps2 text-ps2-menu-fg">
+          <div className="font-body text-ps2-menu-fg">
             <h1 className="text-sm font-bold">Memory Card (PS2)/1</h1>
             <p className="text-xs text-ps2-menu-fg/70">1,035 KB Free</p>
           </div>
         </div>
-        <div className="font-ps2 text-ps2-menu-fg text-right">
+        <div className="font-body text-ps2-menu-fg text-right">
           <p className="text-sm font-bold">Your System</p>
           <p className="text-sm font-bold">Configuration</p>
         </div>
@@ -104,7 +104,7 @@ const BrowsePage = () => {
                       <div className="h-1 bg-gray-300 rounded w-2/3" />
                     </div>
                     {/* CV text */}
-                    <div className="absolute bottom-2 left-2 font-ps2 text-[8px] text-gray-600 font-bold">
+                    <div className="absolute bottom-2 left-2 font-body text-[8px] text-muted-foreground font-bold">
                       CV
                     </div>
                   </div>
@@ -119,7 +119,7 @@ const BrowsePage = () => {
                   <div className="absolute inset-0 bg-ps2-glow/30 rounded-sm blur-lg" />
                 )}
               </motion.div>
-              <span className={`text-xs font-ps2 tracking-wider ${
+              <span className={`text-xs font-body tracking-wider ${
                 selectedIndex === index ? "text-ps2-menu-fg" : "text-ps2-menu-fg/70"
               } group-hover:text-ps2-menu-fg transition-colors`}>
                 {item.label}
