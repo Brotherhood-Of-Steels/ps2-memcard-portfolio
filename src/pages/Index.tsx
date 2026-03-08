@@ -93,7 +93,7 @@ const Index = () => {
 
       {/* Bottom bar — centered */}
       <motion.nav
-        className="flex items-center justify-center gap-16 px-8 py-5 opacity-65 rounded-none"
+        className="flex items-center justify-center gap-16 px-8 py-5 rounded-none opacity-60"
         initial={{ y: 30, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ delay: 0.4 }}>
