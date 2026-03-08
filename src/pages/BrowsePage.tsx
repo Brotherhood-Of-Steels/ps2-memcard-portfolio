@@ -37,7 +37,7 @@ const BrowsePage = () => {
   });
 
   return (
-    <main className="min-h-screen bg-ps2-gray flex flex-col" role="application" aria-label="Browse Memory Card">
+    <main className="min-h-screen bg-ps2-gray flex flex-col items-center justify-center" role="application" aria-label="Browse Memory Card">
       {/* Header */}
       <header className="flex items-center justify-between px-10 pt-4 pb-1">
         <div className="flex items-center gap-3">
