@@ -2,29 +2,54 @@ import { useRef, useMemo } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 
+// PS2 BIOS style: ~8 bright orbs orbiting in a wobbly ring, 
+// connected by faint blue trails forming a constellation shape
 const orbDefs = [
-  { radius: 1.8, angle: 0, speed: 0.3 },
-  { radius: 1.9, angle: 45, speed: 0.3 },
-  { radius: 1.7, angle: 90, speed: 0.3 },
-  { radius: 2.0, angle: 135, speed: 0.3 },
-  { radius: 1.75, angle: 180, speed: 0.3 },
-  { radius: 1.95, angle: 225, speed: 0.3 },
-  { radius: 1.85, angle: 270, speed: 0.3 },
-  { radius: 1.9, angle: 315, speed: 0.3 },
+  { radius: 1.6, yRadius: 1.1, angle: 0, speed: 0.15, zOff: 0.3 },
+  { radius: 1.7, yRadius: 1.2, angle: 50, speed: 0.15, zOff: -0.2 },
+  { radius: 1.5, yRadius: 1.0, angle: 95, speed: 0.15, zOff: 0.4 },
+  { radius: 1.8, yRadius: 1.3, angle: 140, speed: 0.15, zOff: -0.1 },
+  { radius: 1.55, yRadius: 1.1, angle: 185, speed: 0.15, zOff: 0.25 },
+  { radius: 1.75, yRadius: 1.25, angle: 230, speed: 0.15, zOff: -0.35 },
+  { radius: 1.6, yRadius: 1.15, angle: 275, speed: 0.15, zOff: 0.15 },
+  { radius: 1.7, yRadius: 1.2, angle: 320, speed: 0.15, zOff: -0.25 },
 ];
 
+// Only adjacent connections + a couple cross-links for the PS2 constellation look
 const connections = [
   [0, 1], [1, 2], [2, 3], [3, 4], [4, 5], [5, 6], [6, 7], [7, 0],
-  [0, 3], [1, 5], [2, 6], [3, 7], [0, 4], [1, 6],
+  [0, 4], [2, 6],
 ];
 
 function getOrbPos(orb: typeof orbDefs[0], t: number): [number, number, number] {
   const a = (orb.angle * Math.PI) / 180 + t * orb.speed;
-  return [Math.cos(a) * orb.radius, Math.sin(a) * orb.radius * 0.65, 0];
+  return [
+    Math.cos(a) * orb.radius,
+    Math.sin(a) * orb.yRadius,
+    Math.sin(a * 0.7 + orb.zOff) * 0.4,
+  ];
+}
+
+// Glow texture for point lights
+function makeGlowTexture() {
+  const size = 64;
+  const canvas = document.createElement("canvas");
+  canvas.width = size;
+  canvas.height = size;
+  const ctx = canvas.getContext("2d")!;
+  const gradient = ctx.createRadialGradient(size / 2, size / 2, 0, size / 2, size / 2, size / 2);
+  gradient.addColorStop(0, "rgba(255,255,255,1)");
+  gradient.addColorStop(0.15, "rgba(200,230,255,0.8)");
+  gradient.addColorStop(0.4, "rgba(100,180,255,0.3)");
+  gradient.addColorStop(1, "rgba(0,100,255,0)");
+  ctx.fillStyle = gradient;
+  ctx.fillRect(0, 0, size, size);
+  return new THREE.CanvasTexture(canvas);
 }
 
 function OrbPoint({ orb }: { orb: typeof orbDefs[0] }) {
-  const ref = useRef<THREE.Mesh>(null!);
+  const ref = useRef<THREE.Group>(null!);
+  const glowTex = useMemo(() => makeGlowTexture(), []);
 
   useFrame(({ clock }) => {
     const [x, y, z] = getOrbPos(orb, clock.getElapsedTime());
@@ -32,33 +57,45 @@ function OrbPoint({ orb }: { orb: typeof orbDefs[0] }) {
   });
 
   return (
-    <mesh ref={ref}>
-      <sphereGeometry args={[0.06, 16, 16]} />
-      <meshBasicMaterial color="#e0f0ff" />
-      {/* Glow sprite */}
-      <sprite scale={[0.5, 0.5, 1]}>
+    <group ref={ref}>
+      {/* Bright core */}
+      <mesh>
+        <sphereGeometry args={[0.04, 12, 12]} />
+        <meshBasicMaterial color="#ffffff" />
+      </mesh>
+      {/* Inner glow */}
+      <sprite scale={[0.35, 0.35, 1]}>
         <spriteMaterial
-          color="#4da6ff"
+          map={glowTex}
           transparent
-          opacity={0.4}
+          opacity={0.9}
           blending={THREE.AdditiveBlending}
           depthWrite={false}
         />
       </sprite>
-    </mesh>
+      {/* Outer glow */}
+      <sprite scale={[0.8, 0.8, 1]}>
+        <spriteMaterial
+          map={glowTex}
+          transparent
+          opacity={0.35}
+          blending={THREE.AdditiveBlending}
+          depthWrite={false}
+        />
+      </sprite>
+    </group>
   );
 }
 
 function Filaments() {
-
   const lines = useMemo(
     () => connections.map(() => {
       const geo = new THREE.BufferGeometry();
       geo.setAttribute("position", new THREE.Float32BufferAttribute([0, 0, 0, 0, 0, 0], 3));
       const mat = new THREE.LineBasicMaterial({
-        color: "#4da6ff",
+        color: new THREE.Color(0.3, 0.6, 1.0),
         transparent: true,
-        opacity: 0.08,
+        opacity: 0.15,
         blending: THREE.AdditiveBlending,
         depthWrite: false,
       });
@@ -92,7 +129,6 @@ function Filaments() {
 function Scene() {
   return (
     <>
-      <color attach="background" args={["#000000"]} />
       {orbDefs.map((orb, i) => (
         <OrbPoint key={i} orb={orb} />
       ))}
@@ -105,7 +141,7 @@ const PS2Orbs = () => {
   return (
     <div className="relative w-full h-full pointer-events-none">
       <Canvas
-        camera={{ position: [0, 0, 5], fov: 50 }}
+        camera={{ position: [0, 0, 4.5], fov: 50 }}
         gl={{ alpha: true, antialias: true }}
         style={{ background: "transparent" }}
       >
