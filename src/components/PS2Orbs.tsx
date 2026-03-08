@@ -53,7 +53,7 @@ function OrbitingOrb({ glowTex, index }: OrbitingOrbProps) {
       });
 
       const sprite = new THREE.Sprite(material);
-      const scale = 0.7 * (1 - i / TRAIL_LENGTH);
+      const scale = 0.95 * (1 - i / TRAIL_LENGTH);
       sprite.scale.set(scale, scale, 1);
       sprites.push(sprite);
     }
@@ -66,11 +66,10 @@ function OrbitingOrb({ glowTex, index }: OrbitingOrbProps) {
     const t = clock.getElapsedTime();
     const angle = t * speed + phase;
 
-    // All orbs share the same circular orbit path — evenly spaced by phase
-    const radius = 1.4;
-    const x = Math.cos(angle) * radius;
-    const y = Math.sin(angle) * radius;
-    const z = Math.sin(angle * 0.5 + t * 0.3) * 0.12;
+    const radius = 1.55 + Math.sin(t * 0.7 + index * 0.9) * 0.12;
+    const x = Math.cos(angle) * radius + Math.sin(t * 0.9 + index) * 0.08;
+    const y = Math.sin(angle) * (1.18 + Math.cos(t * 0.8 + index) * 0.1) + Math.cos(t * 0.6 + index) * 0.05;
+    const z = Math.sin(angle * 1.8 + t * 0.7 + index) * 0.16;
 
     ref.current.position.set(x, y, z);
 
@@ -96,14 +95,14 @@ function OrbitingOrb({ glowTex, index }: OrbitingOrbProps) {
       ))}
 
       <group ref={ref}>
-        <sprite scale={[0.7, 0.7, 1]}>
+        <sprite scale={[1.0, 1.0, 1]}>
           <spriteMaterial map={glowTex} transparent opacity={1} blending={THREE.AdditiveBlending} depthWrite={false} toneMapped={false} />
         </sprite>
-        <sprite scale={[1.4, 1.4, 1]}>
-          <spriteMaterial map={glowTex} transparent opacity={0.55} blending={THREE.AdditiveBlending} depthWrite={false} toneMapped={false} />
+        <sprite scale={[2.0, 2.0, 1]}>
+          <spriteMaterial map={glowTex} transparent opacity={0.62} blending={THREE.AdditiveBlending} depthWrite={false} toneMapped={false} />
         </sprite>
-        <sprite scale={[2.6, 2.6, 1]}>
-          <spriteMaterial map={glowTex} transparent opacity={0.18} blending={THREE.AdditiveBlending} depthWrite={false} toneMapped={false} />
+        <sprite scale={[3.6, 3.6, 1]}>
+          <spriteMaterial map={glowTex} transparent opacity={0.22} blending={THREE.AdditiveBlending} depthWrite={false} toneMapped={false} />
         </sprite>
       </group>
     </group>
