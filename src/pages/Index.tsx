@@ -61,7 +61,7 @@ const Index = () => {
           <div className="w-52 h-48 md:w-64 md:h-56" />
 
           {/* Menu text — below orbs layer */}
-          <div className="flex flex-col gap-1 relative z-20 pointer-events-auto">
+          <div className="flex flex-col gap-1 relative z-0 pointer-events-auto">
             {menuItems.map((item, index) => (
               <button
                 key={item.id}
