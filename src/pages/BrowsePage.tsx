@@ -141,7 +141,7 @@ const BrowsePage = () => {
       </div>
 
       {/* Bottom bar — inline, not fixed */}
-      <nav className="flex items-center justify-center gap-20 px-10 py-4 font-body">
+      <nav className="flex items-center justify-center gap-20 px-10 py-3 font-body">
         <button onClick={handleEnter} className="flex items-center gap-2 text-ps2-menu-fg text-base tracking-wide hover:text-primary transition-colors">
           <span className="font-bold text-lg">✕</span>
           <span className="font-bold">Enter</span>
