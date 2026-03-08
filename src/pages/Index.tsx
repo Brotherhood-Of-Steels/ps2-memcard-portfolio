@@ -100,14 +100,14 @@ const Index = () => {
       >
         <div className="flex items-center gap-3">
           <div className="flex flex-col items-center gap-0.5">
-            <span className="inline-flex items-center justify-center w-5 h-5 border border-foreground/60 rounded-sm text-[10px] text-foreground leading-none">▲</span>
-            <span className="inline-flex items-center justify-center w-5 h-5 border border-foreground/60 rounded-sm text-[10px] text-foreground leading-none">▼</span>
+            <span className="inline-flex items-center justify-center w-5 h-5 border border-foreground/60 rounded-sm text-[10px] text-foreground leading-none font-semibold">▲</span>
+            <span className="inline-flex items-center justify-center w-5 h-5 border border-foreground/60 rounded-sm text-[10px] text-foreground leading-none font-semibold">▼</span>
           </div>
-          <span className="font-body text-sm tracking-wider text-foreground">Select</span>
+          <span className="font-body text-sm tracking-wider text-foreground font-semibold">Select</span>
         </div>
         <button
           onClick={handleEnter}
-          className="font-body text-sm tracking-wider text-foreground hover:text-primary transition-colors focus:outline-none"
+          className="font-body text-sm tracking-wider text-foreground font-semibold hover:text-primary transition-colors focus:outline-none"
         >
           Enter
         </button>
