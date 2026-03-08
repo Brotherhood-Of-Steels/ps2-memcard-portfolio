@@ -47,7 +47,7 @@ const BrowsePage = () => {
             <p className="text-xs text-ps2-menu-fg/70">1,035 KB Free</p>
           </div>
         </div>
-        <div className="font-ps2 text-ps2-menu-fg text-right">
+        <div className="font-body text-ps2-menu-fg text-right">
           <p className="text-sm font-bold">Your System</p>
           <p className="text-sm font-bold">Configuration</p>
         </div>
