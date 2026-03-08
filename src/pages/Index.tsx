@@ -13,10 +13,18 @@ const Index = () => {
   const [enterFlash, setEnterFlash] = useState(false);
   const navigate = useNavigate();
 
+  const handleNavigate = (path: string) => {
+    if (path.startsWith("http")) {
+      window.open(path, "_blank");
+    } else {
+      navigate(path);
+    }
+  };
+
   const handleEnter = () => {
     setEnterFlash(true);
     setTimeout(() => {
-      navigate(menuItems[selectedIndex].path);
+      handleNavigate(menuItems[selectedIndex].path);
     }, 300);
   };
 
