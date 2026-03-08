@@ -52,11 +52,18 @@ function OrbPoint({ orb }: { orb: typeof orbDefs[0] }) {
 function Filaments() {
   const lineRefs = useRef<(THREE.Line | null)[]>([]);
 
-  const geometries = useMemo(
+  const lines = useMemo(
     () => connections.map(() => {
       const geo = new THREE.BufferGeometry();
       geo.setAttribute("position", new THREE.Float32BufferAttribute([0, 0, 0, 0, 0, 0], 3));
-      return geo;
+      const mat = new THREE.LineBasicMaterial({
+        color: "#4da6ff",
+        transparent: true,
+        opacity: 0.08,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false,
+      });
+      return new THREE.Line(geo, mat);
     }),
     []
   );
