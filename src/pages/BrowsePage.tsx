@@ -104,7 +104,7 @@ const BrowsePage = () => {
                       <div className="h-1 bg-gray-300 rounded w-2/3" />
                     </div>
                     {/* CV text */}
-                    <div className="absolute bottom-2 left-2 font-ps2 text-[8px] text-gray-600 font-bold">
+                    <div className="absolute bottom-2 left-2 font-body text-[8px] text-muted-foreground font-bold">
                       CV
                     </div>
                   </div>
