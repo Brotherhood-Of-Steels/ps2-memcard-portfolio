@@ -169,7 +169,10 @@ const PS2Orbs = () => {
     <div className="relative w-full h-full pointer-events-none">
       <Canvas
         camera={{ position: [0, 0, 5.5], fov: 50 }}
-        gl={{ alpha: true, antialias: true, toneMapping: THREE.NoToneMapping }}
+        gl={{ alpha: true, antialias: true, toneMapping: THREE.NoToneMapping, setClearColor: undefined } as any}
+        onCreated={({ gl }) => {
+          gl.setClearColor(0x000000, 0);
+        }}
         style={{ background: "transparent" }}
       >
         <OrbSystem />
