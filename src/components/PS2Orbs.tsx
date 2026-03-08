@@ -54,7 +54,7 @@ function OrbitingOrb({ glowTex, index }: OrbitingOrbProps) {
       });
 
       const sprite = new THREE.Sprite(material);
-      const scale = 0.45 * (1 - i / TRAIL_LENGTH);
+      const scale = 0.65 * (1 - i / TRAIL_LENGTH);
       sprite.scale.set(scale, scale, 1);
       sprites.push(sprite);
     }
@@ -105,13 +105,13 @@ function OrbitingOrb({ glowTex, index }: OrbitingOrbProps) {
       ))}
 
       <group ref={ref}>
-        <sprite scale={[0.5, 0.5, 1]}>
+        <sprite scale={[0.7, 0.7, 1]}>
           <spriteMaterial map={glowTex} transparent opacity={1} blending={THREE.AdditiveBlending} depthWrite={false} toneMapped={false} />
         </sprite>
-        <sprite scale={[1.0, 1.0, 1]}>
+        <sprite scale={[1.4, 1.4, 1]}>
           <spriteMaterial map={glowTex} transparent opacity={0.62} blending={THREE.AdditiveBlending} depthWrite={false} toneMapped={false} />
         </sprite>
-        <sprite scale={[1.8, 1.8, 1]}>
+        <sprite scale={[2.5, 2.5, 1]}>
           <spriteMaterial map={glowTex} transparent opacity={0.22} blending={THREE.AdditiveBlending} depthWrite={false} toneMapped={false} />
         </sprite>
       </group>
