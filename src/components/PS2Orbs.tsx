@@ -66,10 +66,11 @@ function OrbitingOrb({ glowTex, index }: OrbitingOrbProps) {
     const t = clock.getElapsedTime();
     const angle = t * speed + phase;
 
-    const radius = 1.55 + Math.sin(t * 0.7 + index * 0.9) * 0.12;
-    const x = Math.cos(angle) * radius + Math.sin(t * 0.9 + index) * 0.08;
-    const y = Math.sin(angle) * (1.18 + Math.cos(t * 0.8 + index) * 0.1) + Math.cos(t * 0.6 + index) * 0.05;
-    const z = Math.sin(angle * 1.8 + t * 0.7 + index) * 0.16;
+    // All orbs share the same circular orbit path — evenly spaced by phase
+    const radius = 1.4;
+    const x = Math.cos(angle) * radius;
+    const y = Math.sin(angle) * radius;
+    const z = Math.sin(angle * 0.5 + t * 0.3) * 0.12;
 
     ref.current.position.set(x, y, z);
 
