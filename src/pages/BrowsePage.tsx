@@ -130,7 +130,7 @@ const BrowsePage = () => {
       </section>
 
       {/* Down arrow */}
-      <div className="flex justify-center py-[1.5vh]">
+      <div className="flex justify-center py-[0.5vh]">
         <motion.div
           className="text-primary text-xl"
           animate={{ y: [0, 5, 0] }}
