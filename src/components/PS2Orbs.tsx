@@ -1,6 +1,8 @@
 import { useMemo, useRef } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import * as THREE from "three";
+import { MathUtils } from "three";
+import * as THREE from "three";
 
 const ORB_COUNT = 8;
 const TRAIL_LENGTH = 22;
