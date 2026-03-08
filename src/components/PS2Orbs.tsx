@@ -72,9 +72,9 @@ function OrbitingOrb({ glowTex, index }: OrbitingOrbProps) {
     const alignCycle = Math.sin(t * 0.4) * 0.5 + 0.5; // 0..1, slow cycle
     const alignStrength = Math.pow(alignCycle, 4); // sharp peaks = inline moments
 
-    const radius = 1.55 + Math.sin(t * 0.7 + index * 0.9) * 0.12;
-    const baseX = Math.cos(angle) * radius + Math.sin(t * 0.9 + index) * 0.08;
-    const baseY = Math.sin(angle) * (1.18 + Math.cos(t * 0.8 + index) * 0.1) + Math.cos(t * 0.6 + index) * 0.05;
+    const radius = 2.2 + Math.sin(t * 0.7 + index * 0.9) * 0.15;
+    const baseX = Math.cos(angle) * radius + Math.sin(t * 0.9 + index) * 0.1;
+    const baseY = Math.sin(angle) * (1.5 + Math.cos(t * 0.8 + index) * 0.12) + Math.cos(t * 0.6 + index) * 0.06;
     const z = Math.sin(angle * 1.8 + t * 0.7 + index) * 0.16;
 
     // When alignStrength is high, flatten Y toward 0 (inline horizontal)
