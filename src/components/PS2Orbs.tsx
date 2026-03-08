@@ -1,7 +1,6 @@
 import { useMemo, useRef } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import * as THREE from "three";
-import { MathUtils } from "three";
 
 const ORB_COUNT = 8;
 const TRAIL_LENGTH = 22;
@@ -31,10 +30,9 @@ function makeGlowTexture() {
 type OrbitingOrbProps = {
   glowTex: THREE.Texture;
   index: number;
-  targetY: React.MutableRefObject<number>;
 };
 
-function OrbitingOrb({ glowTex, index, targetY }: OrbitingOrbProps) {
+function OrbitingOrb({ glowTex, index }: OrbitingOrbProps) {
   const ref = useRef<THREE.Group>(null!);
   const trailRefs = useRef<THREE.Sprite[]>([]);
   const posHistory = useRef<THREE.Vector3[]>([]);
@@ -83,9 +81,9 @@ function OrbitingOrb({ glowTex, index, targetY }: OrbitingOrbProps) {
     const x = baseX;
     const y = baseY * (1 - alignStrength * 0.92);
 
-    ref.current.position.set(x, y + targetY.current, z);
+    ref.current.position.set(x, y, z);
 
-    posHistory.current.unshift(new THREE.Vector3(x, y + targetY.current, z));
+    posHistory.current.unshift(new THREE.Vector3(x, y, z));
     if (posHistory.current.length > TRAIL_LENGTH * 2) {
       posHistory.current.length = TRAIL_LENGTH * 2;
     }
@@ -121,33 +119,19 @@ function OrbitingOrb({ glowTex, index, targetY }: OrbitingOrbProps) {
   );
 }
 
-function OrbSystem({ selectedIndex }: { selectedIndex: number }) {
+function OrbSystem() {
   const glowTex = useMemo(() => makeGlowTexture(), []);
-  const targetY = useRef(0);
-  const currentY = useRef(0);
-
-  // Map selectedIndex to Y offset in 3D space
-  // Index 0 (Browser) = positive Y (up), Index 1 (Games) = negative Y (down)
-  useFrame(() => {
-    const desiredY = selectedIndex === 0 ? 0.6 : -0.6;
-    currentY.current = MathUtils.lerp(currentY.current, desiredY, 0.04);
-    targetY.current = currentY.current;
-  });
 
   return (
     <>
       {Array.from({ length: ORB_COUNT }).map((_, index) => (
-        <OrbitingOrb key={index} glowTex={glowTex} index={index} targetY={targetY} />
+        <OrbitingOrb key={index} glowTex={glowTex} index={index} />
       ))}
     </>
   );
 }
 
-type PS2OrbsProps = {
-  selectedIndex?: number;
-};
-
-const PS2Orbs = ({ selectedIndex = 0 }: PS2OrbsProps) => {
+const PS2Orbs = () => {
   return (
     <div className="relative w-full h-full pointer-events-none">
       <Canvas
@@ -158,7 +142,7 @@ const PS2Orbs = ({ selectedIndex = 0 }: PS2OrbsProps) => {
         }}
         style={{ background: "transparent" }}
       >
-        <OrbSystem selectedIndex={selectedIndex} />
+        <OrbSystem />
       </Canvas>
     </div>
   );
