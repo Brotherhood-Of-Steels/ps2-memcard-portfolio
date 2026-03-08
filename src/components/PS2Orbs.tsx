@@ -50,7 +50,6 @@ function OrbPoint({ orb }: { orb: typeof orbDefs[0] }) {
 }
 
 function Filaments() {
-  const lineRefs = useRef<(THREE.Line | null)[]>([]);
 
   const lines = useMemo(
     () => connections.map(() => {
