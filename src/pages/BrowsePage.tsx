@@ -5,9 +5,9 @@ import { FileText, BookOpen, Pen } from "lucide-react";
 
 
 const browseItems = [
-  { id: "cv", label: "My CV", icon: FileText, color: "hsl(210, 80%, 65%)", action: "download-cv" },
-  { id: "blog", label: "My Blog", icon: BookOpen, color: "hsl(140, 70%, 55%)", action: "link", url: "https://yourblog.com" },
-  { id: "medium", label: "Medium", icon: Pen, color: "hsl(0, 0%, 90%)", action: "link", url: "https://medium.com" },
+  { id: "cv", label: "My CV", icon: FileText, colorFrom: "hsl(230, 90%, 60%)", colorTo: "hsl(280, 80%, 55%)", glow: "hsl(250, 85%, 60%)", action: "download-cv" },
+  { id: "blog", label: "My Blog", icon: BookOpen, colorFrom: "hsl(150, 80%, 45%)", colorTo: "hsl(180, 90%, 50%)", glow: "hsl(165, 85%, 48%)", action: "link", url: "https://yourblog.com" },
+  { id: "medium", label: "Medium", icon: Pen, colorFrom: "hsl(25, 95%, 55%)", colorTo: "hsl(340, 85%, 55%)", glow: "hsl(350, 90%, 55%)", action: "link", url: "https://medium.com" },
 ];
 
 const BrowsePage = () => {
@@ -85,36 +85,57 @@ const BrowsePage = () => {
                 }}
                 style={{ perspective: "200px", transformStyle: "preserve-3d" }}
               >
-                {/* PS2 memory card save icon style */}
-                <div className="relative w-16 h-16">
-                  {/* Base card shape */}
-                  <div 
+                {/* PS2 memory card save icon - colorful 3D */}
+                <div className="relative w-20 h-20">
+                  {/* Back shadow layer for depth */}
+                  <div
+                    className="absolute inset-0 rounded-sm translate-x-1 translate-y-1 opacity-40 blur-[1px]"
+                    style={{ background: item.colorTo }}
+                  />
+                  {/* Main card */}
+                  <div
                     className="absolute inset-0 rounded-sm shadow-lg overflow-hidden"
-                    style={{ 
-                      background: `linear-gradient(135deg, ${item.color}, ${item.color}88)`,
-                      transform: "rotateX(10deg)" 
+                    style={{
+                      background: `linear-gradient(135deg, ${item.colorFrom}, ${item.colorTo})`,
+                      transform: "rotateX(10deg)",
                     }}
                   >
+                    {/* Shine overlay */}
+                    <div
+                      className="absolute inset-0"
+                      style={{
+                        background: "linear-gradient(160deg, rgba(255,255,255,0.35) 0%, rgba(255,255,255,0) 50%)",
+                      }}
+                    />
                     {/* Icon centered */}
                     <div className="absolute inset-0 flex items-center justify-center">
-                      <item.icon size={28} className="text-ps2-menu-fg/90 drop-shadow-md" />
+                      <item.icon size={32} className="text-white drop-shadow-lg" />
                     </div>
+                    {/* Bottom accent bar */}
+                    <div
+                      className="absolute bottom-0 left-0 right-0 h-2"
+                      style={{ background: `linear-gradient(90deg, ${item.colorTo}, ${item.colorFrom})` }}
+                    />
                     {/* Bottom label */}
-                    <div className="absolute bottom-1 left-0 right-0 text-center font-body text-[7px] text-ps2-menu-fg/70 font-bold uppercase tracking-wider">
+                    <div className="absolute bottom-2.5 left-0 right-0 text-center font-body text-[7px] text-white/80 font-bold uppercase tracking-wider">
                       {item.id}
                     </div>
                   </div>
                   {/* Side accent */}
-                  <div 
+                  <div
                     className="absolute left-0 top-0 bottom-0 w-1.5 rounded-l-sm"
-                    style={{ background: `linear-gradient(to bottom, ${item.color}, ${item.color}66)` }}
+                    style={{ background: `linear-gradient(to bottom, ${item.colorFrom}, ${item.colorTo})` }}
                   />
                 </div>
-                
-                {/* Glow effect */}
-                {selectedIndex === index && (
-                  <div className="absolute inset-0 bg-ps2-glow/30 rounded-sm blur-lg" />
-                )}
+
+                {/* Glow effect - always visible, intensifies on select */}
+                <div
+                  className="absolute inset-0 rounded-sm blur-xl transition-opacity duration-500"
+                  style={{
+                    background: item.glow,
+                    opacity: selectedIndex === index ? 0.45 : 0.15,
+                  }}
+                />
               </motion.div>
               <span className={`text-xs font-body tracking-wider ${
                 selectedIndex === index ? "text-ps2-menu-fg" : "text-ps2-menu-fg/70"
