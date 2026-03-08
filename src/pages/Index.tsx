@@ -53,7 +53,7 @@ const Index = () => {
       <div className="flex-1 flex items-center justify-center">
         <div className="relative flex items-center gap-6 md:gap-10">
           {/* Orbs — covers full area so they can pass over the menu */}
-          <div className="absolute inset-0 -left-20 -right-20 -top-20 -bottom-20 pointer-events-none z-10" style={{ transform: 'translateX(-30px)' }}>
+          <div className="absolute inset-0 -left-20 -right-20 -top-20 -bottom-20 pointer-events-none z-10" style={{ transform: 'translateX(-50px)' }}>
             <PS2Orbs />
           </div>
 
