@@ -3,7 +3,6 @@ import { Canvas, useFrame } from "@react-three/fiber";
 import { EffectComposer, Bloom } from "@react-three/postprocessing";
 import * as THREE from "three";
 
-// Larger polygon positions — bigger orbs, more spread
 const basePositions: [number, number, number][] = [
   [-0.4, 1.8, 0],
   [1.0, 1.3, 0.3],
@@ -15,10 +14,7 @@ const basePositions: [number, number, number][] = [
   [-1.0, 1.3, 0.15],
 ];
 
-const connections = [
-  [0, 1], [1, 2], [2, 3], [3, 4], [4, 5], [5, 6], [6, 7], [7, 0],
-  [0, 4], [2, 6],
-];
+const TRAIL_LENGTH = 12;
 
 function makeGlowTexture() {
   const size = 128;
@@ -38,26 +34,48 @@ function makeGlowTexture() {
   return new THREE.CanvasTexture(canvas);
 }
 
-// Stable orb component — no inline component creation
-function DriftingOrb({ basePos, glowTex, orbRef, seed }: {
+function DriftingOrb({ basePos, glowTex, seed }: {
   basePos: [number, number, number];
   glowTex: THREE.Texture;
-  orbRef: React.MutableRefObject<THREE.Group | null>;
   seed: number;
 }) {
   const ref = useRef<THREE.Group>(null!);
+  // Trail: array of small sprites that follow the orb
+  const trailRefs = useRef<THREE.Sprite[]>([]);
+  const posHistory = useRef<THREE.Vector3[]>([]);
 
   const offsets = useMemo(() => ({
-    xFreq: 0.25 + (seed * 0.1) % 0.3,
-    yFreq: 0.2 + ((seed * 0.17) % 0.25),
-    zFreq: 0.15 + ((seed * 0.13) % 0.2),
+    xFreq: 0.4 + (seed * 0.13) % 0.4,
+    yFreq: 0.35 + ((seed * 0.19) % 0.35),
+    zFreq: 0.25 + ((seed * 0.11) % 0.25),
     xPhase: (seed * 1.7) % (Math.PI * 2),
     yPhase: (seed * 2.3) % (Math.PI * 2),
     zPhase: (seed * 3.1) % (Math.PI * 2),
-    xAmp: 0.2 + (seed * 0.07) % 0.35,
-    yAmp: 0.2 + (seed * 0.09) % 0.35,
-    zAmp: 0.12 + (seed * 0.05) % 0.2,
+    xAmp: 0.25 + (seed * 0.08) % 0.4,
+    yAmp: 0.25 + (seed * 0.1) % 0.4,
+    zAmp: 0.15 + (seed * 0.06) % 0.2,
   }), [seed]);
+
+  // Create trail sprites
+  const trailSprites = useMemo(() => {
+    const sprites: THREE.Sprite[] = [];
+    for (let i = 0; i < TRAIL_LENGTH; i++) {
+      const mat = new THREE.SpriteMaterial({
+        map: glowTex,
+        transparent: true,
+        opacity: 0,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false,
+        toneMapped: false,
+      });
+      const sprite = new THREE.Sprite(mat);
+      const scale = 0.4 * (1 - i / TRAIL_LENGTH);
+      sprite.scale.set(scale, scale, 1);
+      sprites.push(sprite);
+    }
+    trailRefs.current = sprites;
+    return sprites;
+  }, [glowTex]);
 
   useFrame(({ clock }) => {
     const t = clock.getElapsedTime();
@@ -65,93 +83,58 @@ function DriftingOrb({ basePos, glowTex, orbRef, seed }: {
     const y = basePos[1] + Math.sin(t * offsets.yFreq + offsets.yPhase) * offsets.yAmp;
     const z = basePos[2] + Math.sin(t * offsets.zFreq + offsets.zPhase) * offsets.zAmp;
     ref.current.position.set(x, y, z);
-  });
 
-  // Share ref for filaments
-  useFrame(() => {
-    if (orbRef) orbRef.current = ref.current;
-  });
+    // Update trail history
+    posHistory.current.unshift(new THREE.Vector3(x, y, z));
+    if (posHistory.current.length > TRAIL_LENGTH * 3) {
+      posHistory.current.length = TRAIL_LENGTH * 3;
+    }
 
-  return (
-    <group ref={ref}>
-      {/* Bigger bright core */}
-      <mesh>
-        <sphereGeometry args={[0.07, 16, 16]} />
-        <meshBasicMaterial color="#ffffff" toneMapped={false} />
-      </mesh>
-      {/* Tight inner glow */}
-      <sprite scale={[0.5, 0.5, 1]}>
-        <spriteMaterial map={glowTex} transparent opacity={1} blending={THREE.AdditiveBlending} depthWrite={false} toneMapped={false} />
-      </sprite>
-      {/* Medium glow */}
-      <sprite scale={[1.0, 1.0, 1]}>
-        <spriteMaterial map={glowTex} transparent opacity={0.5} blending={THREE.AdditiveBlending} depthWrite={false} toneMapped={false} />
-      </sprite>
-      {/* Wide soft glow */}
-      <sprite scale={[1.8, 1.8, 1]}>
-        <spriteMaterial map={glowTex} transparent opacity={0.15} blending={THREE.AdditiveBlending} depthWrite={false} toneMapped={false} />
-      </sprite>
-    </group>
-  );
-}
-
-function Filaments({ orbRefs }: { orbRefs: React.MutableRefObject<THREE.Group | null>[] }) {
-  const lines = useMemo(
-    () => connections.map(() => {
-      const geo = new THREE.BufferGeometry();
-      geo.setAttribute("position", new THREE.Float32BufferAttribute([0, 0, 0, 0, 0, 0], 3));
-      const mat = new THREE.LineBasicMaterial({
-        color: new THREE.Color(0.15, 0.35, 0.8),
-        transparent: true,
-        opacity: 0.018,
-        blending: THREE.AdditiveBlending,
-        depthWrite: false,
-        toneMapped: false,
-      });
-      return new THREE.Line(geo, mat);
-    }),
-    []
-  );
-
-  useFrame(() => {
-    connections.forEach(([a, b], i) => {
-      const pa = orbRefs[a]?.current?.position;
-      const pb = orbRefs[b]?.current?.position;
-      if (!pa || !pb) return;
-      const geo = lines[i].geometry;
-      const pos = geo.attributes.position as THREE.BufferAttribute;
-      pos.setXYZ(0, pa.x, pa.y, pa.z);
-      pos.setXYZ(1, pb.x, pb.y, pb.z);
-      pos.needsUpdate = true;
+    // Position trail sprites along history
+    trailRefs.current.forEach((sprite, i) => {
+      const histIdx = (i + 1) * 3;
+      if (posHistory.current[histIdx]) {
+        sprite.position.copy(posHistory.current[histIdx]);
+        const fade = 0.35 * (1 - i / TRAIL_LENGTH);
+        (sprite.material as THREE.SpriteMaterial).opacity = fade;
+      }
     });
   });
 
   return (
-    <>
-      {lines.map((l, i) => <primitive key={i} object={l} />)}
-    </>
+    <group>
+      {/* Trail sprites */}
+      {trailSprites.map((sprite, i) => (
+        <primitive key={`trail-${i}`} object={sprite} />
+      ))}
+      {/* Main orb */}
+      <group ref={ref}>
+        <mesh>
+          <sphereGeometry args={[0.07, 16, 16]} />
+          <meshBasicMaterial color="#ffffff" toneMapped={false} />
+        </mesh>
+        <sprite scale={[0.5, 0.5, 1]}>
+          <spriteMaterial map={glowTex} transparent opacity={1} blending={THREE.AdditiveBlending} depthWrite={false} toneMapped={false} />
+        </sprite>
+        <sprite scale={[1.0, 1.0, 1]}>
+          <spriteMaterial map={glowTex} transparent opacity={0.5} blending={THREE.AdditiveBlending} depthWrite={false} toneMapped={false} />
+        </sprite>
+        <sprite scale={[1.8, 1.8, 1]}>
+          <spriteMaterial map={glowTex} transparent opacity={0.15} blending={THREE.AdditiveBlending} depthWrite={false} toneMapped={false} />
+        </sprite>
+      </group>
+    </group>
   );
 }
 
 function OrbSystem() {
   const glowTex = useMemo(() => makeGlowTexture(), []);
-  const orbRefs = useMemo(
-    () => basePositions.map(() => ({ current: null as THREE.Group | null })),
-    []
-  );
 
   return (
     <>
       {basePositions.map((pos, i) => (
-        <DriftingOrb
-          key={i}
-          basePos={pos}
-          glowTex={glowTex}
-          orbRef={orbRefs[i]}
-          seed={i + 1}
-        />
+        <DriftingOrb key={i} basePos={pos} glowTex={glowTex} seed={i + 1} />
       ))}
-      <Filaments orbRefs={orbRefs} />
       <EffectComposer>
         <Bloom intensity={1.5} luminanceThreshold={0.08} luminanceSmoothing={0.9} mipmapBlur />
       </EffectComposer>
