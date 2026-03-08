@@ -119,7 +119,7 @@ const BrowsePage = () => {
                   <div className="absolute inset-0 bg-ps2-glow/30 rounded-sm blur-lg" />
                 )}
               </motion.div>
-              <span className={`text-xs font-ps2 tracking-wider ${
+              <span className={`text-xs font-body tracking-wider ${
                 selectedIndex === index ? "text-ps2-menu-fg" : "text-ps2-menu-fg/70"
               } group-hover:text-ps2-menu-fg transition-colors`}>
                 {item.label}
