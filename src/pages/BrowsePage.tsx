@@ -133,19 +133,15 @@ const BrowsePage = () => {
       </section>
 
       {/* Bottom bar */}
-      <nav className="flex items-center justify-center gap-20 px-10 pt-4 pb-[4vh] font-body">
+      <nav className="flex items-center justify-center gap-16 px-10 pt-4 pb-[4vh] font-body">
         <button onClick={handleEnter} className="flex items-center gap-2 text-ps2-menu-fg text-base tracking-wide hover:text-primary transition-colors">
-          <span className="font-bold text-lg">✕</span>
+          <span className="font-bold">↵</span>
           <span className="font-bold">Enter</span>
         </button>
         <button onClick={handleBack} className="flex items-center gap-2 text-ps2-menu-fg text-base tracking-wide hover:text-primary transition-colors">
-          <span className="font-bold text-lg">○</span>
+          <span className="font-bold">←</span>
           <span className="font-bold">Back</span>
         </button>
-        <span className="flex items-center gap-2 text-ps2-menu-fg text-base tracking-wide">
-          <span className="font-bold text-lg">△</span>
-          <span className="font-bold">Options</span>
-        </span>
       </nav>
     </main>
   );
