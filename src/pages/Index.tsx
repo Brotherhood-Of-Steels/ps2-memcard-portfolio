@@ -75,7 +75,7 @@ const Index = () => {
               key={item.id}
               onClick={() => {
                 setSelectedIndex(index);
-                navigate(item.path);
+                handleNavigate(item.path);
               }}
               className="text-left focus:outline-none py-0.5">
               
