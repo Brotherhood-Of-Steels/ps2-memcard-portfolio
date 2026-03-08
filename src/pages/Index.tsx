@@ -5,7 +5,7 @@ import PS2Orbs from "@/components/PS2Orbs";
 
 const menuItems = [
 { id: "browser", label: "Browser", path: "/browse" },
-{ id: "games", label: "Games", path: "/games" }];
+{ id: "blog", label: "My Blog", path: "https://medium.com" }];
 
 
 const Index = () => {
@@ -13,10 +13,18 @@ const Index = () => {
   const [enterFlash, setEnterFlash] = useState(false);
   const navigate = useNavigate();
 
+  const handleNavigate = (path: string) => {
+    if (path.startsWith("http")) {
+      window.open(path, "_blank");
+    } else {
+      navigate(path);
+    }
+  };
+
   const handleEnter = () => {
     setEnterFlash(true);
     setTimeout(() => {
-      navigate(menuItems[selectedIndex].path);
+      handleNavigate(menuItems[selectedIndex].path);
     }, 300);
   };
 
@@ -67,7 +75,7 @@ const Index = () => {
               key={item.id}
               onClick={() => {
                 setSelectedIndex(index);
-                navigate(item.path);
+                handleNavigate(item.path);
               }}
               className="text-left focus:outline-none py-0.5">
               
