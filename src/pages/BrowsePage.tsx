@@ -37,9 +37,9 @@ const BrowsePage = () => {
   });
 
   return (
-    <main className="min-h-screen bg-ps2-gray flex flex-col items-center justify-center" role="application" aria-label="Browse Memory Card">
+    <main className="h-screen bg-ps2-gray flex flex-col" role="application" aria-label="Browse Memory Card">
       {/* Header */}
-      <header className="flex items-center justify-between px-10 pt-4 pb-1">
+      <header className="flex items-center justify-between px-[5%] py-[2.5vh]">
         <div className="flex items-center gap-3">
           <div className="w-10 h-7 bg-[hsl(220,15%,25%)] rounded-sm" aria-hidden="true" />
           <div className="font-body text-ps2-menu-fg leading-tight">
@@ -54,7 +54,7 @@ const BrowsePage = () => {
       </header>
 
       {/* Items Grid */}
-      <section className="flex items-center justify-center px-16 py-8">
+      <section className="flex-1 flex items-center justify-center px-[8%]">
         <div className="grid grid-cols-5 gap-x-10 gap-y-8">
           {browseItems.map((item, index) => (
             <motion.button
