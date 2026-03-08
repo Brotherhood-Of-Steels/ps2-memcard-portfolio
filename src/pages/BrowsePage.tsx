@@ -5,9 +5,9 @@ import { FileText, BookOpen, Pen } from "lucide-react";
 
 
 const browseItems = [
-  { id: "cv", label: "My CV", icon: FileText, color: "hsl(210, 80%, 65%)", action: "download-cv" },
-  { id: "blog", label: "My Blog", icon: BookOpen, color: "hsl(140, 70%, 55%)", action: "link", url: "https://yourblog.com" },
-  { id: "medium", label: "Medium", icon: Pen, color: "hsl(0, 0%, 90%)", action: "link", url: "https://medium.com" },
+  { id: "cv", label: "My CV", icon: FileText, colorFrom: "hsl(230, 90%, 60%)", colorTo: "hsl(280, 80%, 55%)", glow: "hsl(250, 85%, 60%)", action: "download-cv" },
+  { id: "blog", label: "My Blog", icon: BookOpen, colorFrom: "hsl(150, 80%, 45%)", colorTo: "hsl(180, 90%, 50%)", glow: "hsl(165, 85%, 48%)", action: "link", url: "https://yourblog.com" },
+  { id: "medium", label: "Medium", icon: Pen, colorFrom: "hsl(25, 95%, 55%)", colorTo: "hsl(340, 85%, 55%)", glow: "hsl(350, 90%, 55%)", action: "link", url: "https://medium.com" },
 ];
 
 const BrowsePage = () => {
