@@ -53,7 +53,7 @@ const Index = () => {
       <div className="flex-1 flex items-center justify-center">
         <div className="flex items-center gap-6 md:gap-10">
           {/* Orbs */}
-          <div className="relative w-40 h-36 md:w-52 md:h-44">
+          <div className="relative w-52 h-48 md:w-64 md:h-56">
             <PS2Orbs />
           </div>
 
