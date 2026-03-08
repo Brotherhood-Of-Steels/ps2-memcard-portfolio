@@ -105,13 +105,13 @@ function OrbitingOrb({ glowTex, index }: OrbitingOrbProps) {
       ))}
 
       <group ref={ref}>
-        <sprite scale={[1.0, 1.0, 1]}>
+        <sprite scale={[0.7, 0.7, 1]}>
           <spriteMaterial map={glowTex} transparent opacity={1} blending={THREE.AdditiveBlending} depthWrite={false} toneMapped={false} />
         </sprite>
-        <sprite scale={[2.0, 2.0, 1]}>
+        <sprite scale={[1.4, 1.4, 1]}>
           <spriteMaterial map={glowTex} transparent opacity={0.62} blending={THREE.AdditiveBlending} depthWrite={false} toneMapped={false} />
         </sprite>
-        <sprite scale={[3.6, 3.6, 1]}>
+        <sprite scale={[2.5, 2.5, 1]}>
           <spriteMaterial map={glowTex} transparent opacity={0.22} blending={THREE.AdditiveBlending} depthWrite={false} toneMapped={false} />
         </sprite>
       </group>
