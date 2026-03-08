@@ -3,9 +3,8 @@ import { Canvas, useFrame } from "@react-three/fiber";
 import { EffectComposer, Bloom } from "@react-three/postprocessing";
 import * as THREE from "three";
 
-// PS2 BIOS: orbs form an irregular polygon that rotates as one shape
-// Positions define the constellation shape (roughly an irregular heptagon)
-const orbPositions: [number, number, number][] = [
+// Base positions — irregular polygon shape
+const basePositions: [number, number, number][] = [
   [-0.3, 1.4, 0],
   [0.8, 1.0, 0.2],
   [1.3, 0.1, -0.1],
@@ -16,10 +15,9 @@ const orbPositions: [number, number, number][] = [
   [-0.8, 1.0, 0.1],
 ];
 
-// Connect adjacent orbs + cross-links for the web
 const connections = [
   [0, 1], [1, 2], [2, 3], [3, 4], [4, 5], [5, 6], [6, 7], [7, 0],
-  [0, 4], [2, 6], [1, 5],
+  [0, 4], [2, 6],
 ];
 
 function makeGlowTexture() {
@@ -39,104 +37,142 @@ function makeGlowTexture() {
   return new THREE.CanvasTexture(canvas);
 }
 
-function OrbSystem() {
-  const groupRef = useRef<THREE.Group>(null!);
-  const glowTex = useMemo(() => makeGlowTexture(), []);
+// Each orb drifts randomly with unique noise offsets
+function Orb({ basePos, index, glowTex }: { basePos: [number, number, number]; index: number; glowTex: THREE.Texture }) {
+  const ref = useRef<THREE.Group>(null!);
+  // Random offsets for organic motion
+  const offsets = useMemo(() => ({
+    xFreq: 0.15 + Math.random() * 0.2,
+    yFreq: 0.12 + Math.random() * 0.18,
+    zFreq: 0.1 + Math.random() * 0.15,
+    xPhase: Math.random() * Math.PI * 2,
+    yPhase: Math.random() * Math.PI * 2,
+    zPhase: Math.random() * Math.PI * 2,
+    xAmp: 0.15 + Math.random() * 0.25,
+    yAmp: 0.15 + Math.random() * 0.25,
+    zAmp: 0.1 + Math.random() * 0.15,
+  }), []);
 
-  // Pre-build line objects
-  const lineObjects = useMemo(() => {
-    return connections.map(([a, b]) => {
+  useFrame(({ clock }) => {
+    const t = clock.getElapsedTime();
+    ref.current.position.set(
+      basePos[0] + Math.sin(t * offsets.xFreq + offsets.xPhase) * offsets.xAmp,
+      basePos[1] + Math.sin(t * offsets.yFreq + offsets.yPhase) * offsets.yAmp,
+      basePos[2] + Math.sin(t * offsets.zFreq + offsets.zPhase) * offsets.zAmp,
+    );
+  });
+
+  return (
+    <group ref={ref}>
+      <mesh>
+        <sphereGeometry args={[0.045, 12, 12]} />
+        <meshBasicMaterial color="#ffffff" toneMapped={false} />
+      </mesh>
+      <sprite scale={[0.3, 0.3, 1]}>
+        <spriteMaterial map={glowTex} transparent opacity={0.9} blending={THREE.AdditiveBlending} depthWrite={false} toneMapped={false} />
+      </sprite>
+      <sprite scale={[0.6, 0.6, 1]}>
+        <spriteMaterial map={glowTex} transparent opacity={0.4} blending={THREE.AdditiveBlending} depthWrite={false} toneMapped={false} />
+      </sprite>
+      <sprite scale={[1.0, 1.0, 1]}>
+        <spriteMaterial map={glowTex} transparent opacity={0.12} blending={THREE.AdditiveBlending} depthWrite={false} toneMapped={false} />
+      </sprite>
+    </group>
+  );
+}
+
+function Filaments({ orbRefs }: { orbRefs: React.RefObject<THREE.Group>[] }) {
+  const lines = useMemo(
+    () => connections.map(() => {
       const geo = new THREE.BufferGeometry();
-      const positions = new Float32Array([
-        orbPositions[a][0], orbPositions[a][1], orbPositions[a][2],
-        orbPositions[b][0], orbPositions[b][1], orbPositions[b][2],
-      ]);
-      geo.setAttribute("position", new THREE.BufferAttribute(positions, 3));
+      geo.setAttribute("position", new THREE.Float32BufferAttribute([0, 0, 0, 0, 0, 0], 3));
       const mat = new THREE.LineBasicMaterial({
         color: new THREE.Color(0.3, 0.55, 1.0),
         transparent: true,
-        opacity: 0.18,
+        opacity: 0.06,
         blending: THREE.AdditiveBlending,
         depthWrite: false,
         toneMapped: false,
       });
       return new THREE.Line(geo, mat);
-    });
-  }, []);
+    }),
+    []
+  );
 
-  // Rotate entire constellation as one unit — slow, like PS2
-  useFrame(({ clock }) => {
-    const t = clock.getElapsedTime();
-    groupRef.current.rotation.z = t * 0.08;
-    groupRef.current.rotation.y = Math.sin(t * 0.05) * 0.15;
-    groupRef.current.rotation.x = Math.cos(t * 0.04) * 0.08;
+  useFrame(() => {
+    connections.forEach(([a, b], i) => {
+      const pa = orbRefs[a]?.current?.position;
+      const pb = orbRefs[b]?.current?.position;
+      if (!pa || !pb) return;
+      const geo = lines[i].geometry;
+      const pos = geo.attributes.position as THREE.BufferAttribute;
+      pos.setXYZ(0, pa.x, pa.y, pa.z);
+      pos.setXYZ(1, pb.x, pb.y, pb.z);
+      pos.needsUpdate = true;
+    });
   });
 
   return (
-    <group ref={groupRef}>
-      {/* Filaments */}
-      {lineObjects.map((line, i) => (
-        <primitive key={`line-${i}`} object={line} />
-      ))}
-
-      {/* Orbs */}
-      {orbPositions.map((pos, i) => (
-        <group key={i} position={pos}>
-          {/* Bright white core */}
-          <mesh>
-            <sphereGeometry args={[0.06, 16, 16]} />
-            <meshBasicMaterial color="#ffffff" toneMapped={false} />
-          </mesh>
-          {/* Tight glow */}
-          <sprite scale={[0.35, 0.35, 1]}>
-            <spriteMaterial
-              map={glowTex}
-              transparent
-              opacity={1}
-              blending={THREE.AdditiveBlending}
-              depthWrite={false}
-              toneMapped={false}
-            />
-          </sprite>
-          {/* Medium glow */}
-          <sprite scale={[0.7, 0.7, 1]}>
-            <spriteMaterial
-              map={glowTex}
-              transparent
-              opacity={0.5}
-              blending={THREE.AdditiveBlending}
-              depthWrite={false}
-              toneMapped={false}
-            />
-          </sprite>
-          {/* Soft outer glow */}
-          <sprite scale={[1.2, 1.2, 1]}>
-            <spriteMaterial
-              map={glowTex}
-              transparent
-              opacity={0.2}
-              blending={THREE.AdditiveBlending}
-              depthWrite={false}
-              toneMapped={false}
-            />
-          </sprite>
-        </group>
-      ))}
-    </group>
+    <>
+      {lines.map((l, i) => <primitive key={i} object={l} />)}
+    </>
   );
 }
 
-function Scene() {
+function OrbSystem() {
+  const glowTex = useMemo(() => makeGlowTexture(), []);
+  const orbRefs = useMemo(() => basePositions.map(() => ({ current: null as THREE.Group | null })), []);
+
   return (
     <>
-      <OrbSystem />
+      {basePositions.map((pos, i) => {
+        const RefOrb = () => {
+          const ref = useRef<THREE.Group>(null!);
+          orbRefs[i] = ref;
+          const offsets = useMemo(() => ({
+            xFreq: 0.15 + Math.random() * 0.2,
+            yFreq: 0.12 + Math.random() * 0.18,
+            zFreq: 0.1 + Math.random() * 0.15,
+            xPhase: Math.random() * Math.PI * 2,
+            yPhase: Math.random() * Math.PI * 2,
+            zPhase: Math.random() * Math.PI * 2,
+            xAmp: 0.15 + Math.random() * 0.25,
+            yAmp: 0.15 + Math.random() * 0.25,
+            zAmp: 0.1 + Math.random() * 0.15,
+          }), []);
+
+          useFrame(({ clock }) => {
+            const t = clock.getElapsedTime();
+            ref.current.position.set(
+              pos[0] + Math.sin(t * offsets.xFreq + offsets.xPhase) * offsets.xAmp,
+              pos[1] + Math.sin(t * offsets.yFreq + offsets.yPhase) * offsets.yAmp,
+              pos[2] + Math.sin(t * offsets.zFreq + offsets.zPhase) * offsets.zAmp,
+            );
+          });
+
+          return (
+            <group ref={ref}>
+              <mesh>
+                <sphereGeometry args={[0.045, 12, 12]} />
+                <meshBasicMaterial color="#ffffff" toneMapped={false} />
+              </mesh>
+              <sprite scale={[0.3, 0.3, 1]}>
+                <spriteMaterial map={glowTex} transparent opacity={0.9} blending={THREE.AdditiveBlending} depthWrite={false} toneMapped={false} />
+              </sprite>
+              <sprite scale={[0.6, 0.6, 1]}>
+                <spriteMaterial map={glowTex} transparent opacity={0.4} blending={THREE.AdditiveBlending} depthWrite={false} toneMapped={false} />
+              </sprite>
+              <sprite scale={[1.0, 1.0, 1]}>
+                <spriteMaterial map={glowTex} transparent opacity={0.12} blending={THREE.AdditiveBlending} depthWrite={false} toneMapped={false} />
+              </sprite>
+            </group>
+          );
+        };
+        return <RefOrb key={i} />;
+      })}
+      <Filaments orbRefs={orbRefs as any} />
       <EffectComposer>
-        <Bloom
-          intensity={1.5}
-          luminanceThreshold={0.1}
-          luminanceSmoothing={0.9}
-          mipmapBlur
-        />
+        <Bloom intensity={1.2} luminanceThreshold={0.1} luminanceSmoothing={0.9} mipmapBlur />
       </EffectComposer>
     </>
   );
@@ -150,7 +186,7 @@ const PS2Orbs = () => {
         gl={{ alpha: true, antialias: true, toneMapping: THREE.NoToneMapping }}
         style={{ background: "transparent" }}
       >
-        <Scene />
+        <OrbSystem />
       </Canvas>
     </div>
   );
