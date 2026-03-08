@@ -14,8 +14,8 @@ export default {
     },
     extend: {
       fontFamily: {
-        ps2: ['"Share Tech Mono"', 'monospace'],
-        body: ['Inter', 'sans-serif'],
+        ps2: ['"Audiowide"', 'sans-serif'],
+        body: ['"Share Tech Mono"', 'monospace'],
       },
       colors: {
         border: "hsl(var(--border))",
