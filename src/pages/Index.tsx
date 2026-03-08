@@ -51,14 +51,17 @@ const Index = () => {
 
       {/* Center content — orbs and menu side by side, close together */}
       <div className="flex-1 flex items-center justify-center">
-        <div className="flex items-center gap-6 md:gap-10">
-          {/* Orbs */}
-          <div className="relative w-52 h-48 md:w-64 md:h-56">
+        <div className="relative flex items-center gap-6 md:gap-10">
+          {/* Orbs — covers full area so they can pass over the menu */}
+          <div className="absolute inset-0 -left-20 -right-20 -top-20 -bottom-20 pointer-events-none z-10">
             <PS2Orbs />
           </div>
 
-          {/* Menu text */}
-          <div className="flex flex-col gap-1 relative z-10">
+          {/* Spacer matching orb area */}
+          <div className="w-52 h-48 md:w-64 md:h-56" />
+
+          {/* Menu text — below orbs layer */}
+          <div className="flex flex-col gap-1 relative z-20 pointer-events-auto">
             {menuItems.map((item, index) => (
               <button
                 key={item.id}
