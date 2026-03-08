@@ -4,7 +4,7 @@ import * as THREE from "three";
 
 const ORB_COUNT = 8;
 const TRAIL_LENGTH = 22;
-const BASE_SPEED = 2.2;
+const BASE_SPEED = 3.2;
 
 function makeGlowTexture() {
   const size = 128;
@@ -54,7 +54,7 @@ function OrbitingOrb({ glowTex, index }: OrbitingOrbProps) {
       });
 
       const sprite = new THREE.Sprite(material);
-      const scale = 0.95 * (1 - i / TRAIL_LENGTH);
+      const scale = 0.65 * (1 - i / TRAIL_LENGTH);
       sprite.scale.set(scale, scale, 1);
       sprites.push(sprite);
     }
@@ -72,9 +72,9 @@ function OrbitingOrb({ glowTex, index }: OrbitingOrbProps) {
     const alignCycle = Math.sin(t * 0.4) * 0.5 + 0.5; // 0..1, slow cycle
     const alignStrength = Math.pow(alignCycle, 4); // sharp peaks = inline moments
 
-    const radius = 1.55 + Math.sin(t * 0.7 + index * 0.9) * 0.12;
-    const baseX = Math.cos(angle) * radius + Math.sin(t * 0.9 + index) * 0.08;
-    const baseY = Math.sin(angle) * (1.18 + Math.cos(t * 0.8 + index) * 0.1) + Math.cos(t * 0.6 + index) * 0.05;
+    const radius = 2.2 + Math.sin(t * 0.7 + index * 0.9) * 0.15;
+    const baseX = Math.cos(angle) * radius + Math.sin(t * 0.9 + index) * 0.1;
+    const baseY = Math.sin(angle) * (1.5 + Math.cos(t * 0.8 + index) * 0.12) + Math.cos(t * 0.6 + index) * 0.06;
     const z = Math.sin(angle * 1.8 + t * 0.7 + index) * 0.16;
 
     // When alignStrength is high, flatten Y toward 0 (inline horizontal)
@@ -105,13 +105,13 @@ function OrbitingOrb({ glowTex, index }: OrbitingOrbProps) {
       ))}
 
       <group ref={ref}>
-        <sprite scale={[1.0, 1.0, 1]}>
+        <sprite scale={[0.7, 0.7, 1]}>
           <spriteMaterial map={glowTex} transparent opacity={1} blending={THREE.AdditiveBlending} depthWrite={false} toneMapped={false} />
         </sprite>
-        <sprite scale={[2.0, 2.0, 1]}>
+        <sprite scale={[1.4, 1.4, 1]}>
           <spriteMaterial map={glowTex} transparent opacity={0.62} blending={THREE.AdditiveBlending} depthWrite={false} toneMapped={false} />
         </sprite>
-        <sprite scale={[3.6, 3.6, 1]}>
+        <sprite scale={[2.5, 2.5, 1]}>
           <spriteMaterial map={glowTex} transparent opacity={0.22} blending={THREE.AdditiveBlending} depthWrite={false} toneMapped={false} />
         </sprite>
       </group>
