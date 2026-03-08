@@ -67,17 +67,23 @@ function OrbitingOrb({ glowTex, index }: OrbitingOrbProps) {
     const t = clock.getElapsedTime();
     const angle = t * speed + phase;
 
-    // Inline alignment pattern: periodically all orbs converge to a line
-    // Uses a sine wave that periodically flattens the Y axis
-    const alignCycle = Math.sin(t * 0.4) * 0.5 + 0.5; // 0..1, slow cycle
-    const alignStrength = Math.pow(alignCycle, 4); // sharp peaks = inline moments
+    // Pattern cycling: normal orbit → inline → wide sweep reaching edges
+    const alignCycle = Math.sin(t * 0.4) * 0.5 + 0.5;
+    const alignStrength = Math.pow(alignCycle, 4);
 
-    const radius = 2.2 + Math.sin(t * 0.7 + index * 0.9) * 0.15;
-    const baseX = Math.cos(angle) * radius + Math.sin(t * 0.9 + index) * 0.1;
-    const baseY = Math.sin(angle) * (1.5 + Math.cos(t * 0.8 + index) * 0.12) + Math.cos(t * 0.6 + index) * 0.06;
-    const z = Math.sin(angle * 1.8 + t * 0.7 + index) * 0.16;
+    // Wide sweep pattern: orbs stretch horizontally to reach menu area
+    const sweepCycle = Math.sin(t * 0.25 + 1.5) * 0.5 + 0.5;
+    const sweepStrength = Math.pow(sweepCycle, 3);
 
-    // When alignStrength is high, flatten Y toward 0 (inline horizontal)
+    const baseRadius = 3.0 + Math.sin(t * 0.7 + index * 0.9) * 0.2;
+    // During sweep, radius gets much wider horizontally
+    const radiusX = baseRadius + sweepStrength * 2.5;
+    const radiusY = 1.8 + Math.cos(t * 0.8 + index) * 0.15;
+
+    const baseX = Math.cos(angle) * radiusX + Math.sin(t * 0.9 + index) * 0.12;
+    const baseY = Math.sin(angle) * radiusY + Math.cos(t * 0.6 + index) * 0.08;
+    const z = Math.sin(angle * 1.8 + t * 0.7 + index) * 0.2;
+
     const x = baseX;
     const y = baseY * (1 - alignStrength * 0.92);
 
