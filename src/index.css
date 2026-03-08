@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Audiowide&family=Share+Tech+Mono&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Audiowide&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -65,7 +65,7 @@
 
   body {
     @apply bg-background text-foreground;
-    font-family: 'Share Tech Mono', monospace;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
     overflow: hidden;
   }
 }
