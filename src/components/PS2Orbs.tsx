@@ -53,7 +53,7 @@ function OrbitingOrb({ glowTex, index }: OrbitingOrbProps) {
       });
 
       const sprite = new THREE.Sprite(material);
-      const scale = 0.95 * (1 - i / TRAIL_LENGTH);
+      const scale = 0.7 * (1 - i / TRAIL_LENGTH);
       sprite.scale.set(scale, scale, 1);
       sprites.push(sprite);
     }
