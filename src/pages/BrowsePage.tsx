@@ -54,7 +54,7 @@ const BrowsePage = () => {
       </header>
 
       {/* Items Grid */}
-      <section className="flex-1 flex items-center justify-center px-16">
+      <section className="flex items-center justify-center px-16 py-8">
         <div className="grid grid-cols-5 gap-x-10 gap-y-8">
           {browseItems.map((item, index) => (
             <motion.button
