@@ -72,11 +72,10 @@ function OrbitingOrb({ glowTex, index }: OrbitingOrbProps) {
     const alignStrength = Math.pow(alignCycle, 4);
 
     // Wide elliptical orbit — stretches far right to pass through menu
-    const radiusX = 3.8 + Math.sin(t * 0.5 + index * 0.7) * 0.3;
-    const radiusY = 2.0 + Math.cos(t * 0.8 + index) * 0.15;
+    const radiusX = 2.6 + Math.sin(t * 0.5 + index * 0.7) * 0.2;
+    const radiusY = 1.6 + Math.cos(t * 0.8 + index) * 0.12;
 
-    // Offset center slightly right so orbit passes through menu area
-    const centerOffsetX = 1.2;
+    const centerOffsetX = 0.8;
 
     const baseX = Math.cos(angle) * radiusX + centerOffsetX + Math.sin(t * 0.9 + index) * 0.1;
     const baseY = Math.sin(angle) * radiusY + Math.cos(t * 0.6 + index) * 0.06;
