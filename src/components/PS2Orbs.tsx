@@ -87,12 +87,13 @@ function Filaments({ orbRefs }: { orbRefs: React.RefObject<THREE.Group>[] }) {
       const geo = new THREE.BufferGeometry();
       geo.setAttribute("position", new THREE.Float32BufferAttribute([0, 0, 0, 0, 0, 0], 3));
       const mat = new THREE.LineBasicMaterial({
-        color: new THREE.Color(0.3, 0.55, 1.0),
+        color: new THREE.Color(0.2, 0.45, 0.9),
         transparent: true,
-        opacity: 0.06,
+        opacity: 0.025,
         blending: THREE.AdditiveBlending,
         depthWrite: false,
         toneMapped: false,
+        linewidth: 1,
       });
       return new THREE.Line(geo, mat);
     }),
