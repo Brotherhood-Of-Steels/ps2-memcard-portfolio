@@ -35,45 +35,48 @@ const Index = () => {
       <div className="ps2-crt-overlay" />
       <div className="ps2-scanline" />
 
-      {/* Orbs fill left/center area */}
-      <div className="absolute inset-0" style={{ right: "30%" }}>
-        <PS2Orbs />
-      </div>
+      {/* Center content — orbs left, text right, like the PS2 BIOS */}
+      <div className="flex-1 flex items-center justify-center">
+        <div className="flex items-center gap-8 md:gap-12">
+          {/* Orbs */}
+          <div className="relative w-44 h-36 md:w-52 md:h-44">
+            <PS2Orbs />
+          </div>
 
-      {/* Right-aligned menu */}
-      <div className="flex-1 flex items-center justify-end pr-12 md:pr-24 relative z-10">
-        <div className="flex flex-col gap-1">
-          {menuItems.map((item, index) => (
-            <button
-              key={item.id}
-              onClick={() => {
-                setSelectedIndex(index);
-                navigate(item.path);
-              }}
-              className="text-right focus:outline-none py-1"
-            >
-              <motion.span
-                className={`block font-body tracking-wider transition-all ${
-                  selectedIndex === index
-                    ? "text-foreground text-2xl md:text-3xl font-bold"
-                    : "text-muted-foreground text-lg md:text-xl"
-                }`}
-                animate={
-                  selectedIndex === index
-                    ? { textShadow: "0 0 20px hsl(210 100% 65% / 0.5)" }
-                    : { textShadow: "none" }
-                }
+          {/* Menu text */}
+          <div className="flex flex-col gap-0">
+            {menuItems.map((item, index) => (
+              <button
+                key={item.id}
+                onClick={() => {
+                  setSelectedIndex(index);
+                  navigate(item.path);
+                }}
+                className="text-left focus:outline-none py-0.5"
               >
-                {item.label}
-              </motion.span>
-            </button>
-          ))}
+                <motion.span
+                  className={`block font-body tracking-wider transition-all ${
+                    selectedIndex === index
+                      ? "text-foreground text-2xl md:text-3xl font-bold"
+                      : "text-muted-foreground text-lg md:text-xl"
+                  }`}
+                  animate={
+                    selectedIndex === index
+                      ? { textShadow: "0 0 20px hsl(210 100% 65% / 0.5)" }
+                      : { textShadow: "none" }
+                  }
+                >
+                  {item.label}
+                </motion.span>
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 
-      {/* Bottom bar */}
+      {/* Bottom bar — centered like reference */}
       <motion.nav
-        className="flex items-center justify-between px-8 md:px-16 py-5 bg-ps2-bar/80"
+        className="flex items-center justify-center gap-16 px-8 py-5"
         initial={{ y: 30, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ delay: 0.4 }}
@@ -85,6 +88,7 @@ const Index = () => {
           </div>
           <span className="font-body text-sm tracking-wider text-foreground">Select</span>
         </div>
+
         <button
           onClick={handleEnter}
           className="font-body text-sm tracking-wider text-foreground hover:text-primary transition-colors"
