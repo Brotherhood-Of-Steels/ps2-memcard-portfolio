@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { FileText } from "lucide-react";
-import PS2BottomBar from "@/components/PS2BottomBar";
+
 
 const browseItems = [
   { id: "cv", label: "My CV", icon: FileText, color: "hsl(210, 80%, 65%)", action: "download-cv" },
