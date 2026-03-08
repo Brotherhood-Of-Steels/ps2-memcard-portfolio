@@ -1,154 +1,118 @@
-import { motion } from "framer-motion";
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useRef, useMemo } from "react";
+import { Canvas, useFrame } from "@react-three/fiber";
+import * as THREE from "three";
 
 const orbDefs = [
-  { radius: 80, angle: 0, size: 8, speed: 20, glow: 22 },
-  { radius: 85, angle: 45, size: 9, speed: 20, glow: 26 },
-  { radius: 75, angle: 90, size: 7, speed: 20, glow: 20 },
-  { radius: 90, angle: 135, size: 8, speed: 20, glow: 24 },
-  { radius: 78, angle: 180, size: 7, speed: 20, glow: 18 },
-  { radius: 88, angle: 225, size: 9, speed: 20, glow: 26 },
-  { radius: 82, angle: 270, size: 8, speed: 20, glow: 22 },
-  { radius: 86, angle: 315, size: 7, speed: 20, glow: 20 },
+  { radius: 1.8, angle: 0, speed: 0.3 },
+  { radius: 1.9, angle: 45, speed: 0.3 },
+  { radius: 1.7, angle: 90, speed: 0.3 },
+  { radius: 2.0, angle: 135, speed: 0.3 },
+  { radius: 1.75, angle: 180, speed: 0.3 },
+  { radius: 1.95, angle: 225, speed: 0.3 },
+  { radius: 1.85, angle: 270, speed: 0.3 },
+  { radius: 1.9, angle: 315, speed: 0.3 },
 ];
 
-// Pairs of orb indices to connect with filaments
 const connections = [
   [0, 1], [1, 2], [2, 3], [3, 4], [4, 5], [5, 6], [6, 7], [7, 0],
   [0, 3], [1, 5], [2, 6], [3, 7], [0, 4], [1, 6],
 ];
 
-const getOrbPosition = (orb: typeof orbDefs[0], time: number) => {
-  const startRad = (orb.angle * Math.PI) / 180;
-  const angularSpeed = (2 * Math.PI) / (orb.speed * 1000);
-  const currentAngle = startRad + time * angularSpeed;
-  return {
-    x: Math.cos(currentAngle) * orb.radius,
-    y: Math.sin(currentAngle) * orb.radius * 0.7,
-  };
-};
+function getOrbPos(orb: typeof orbDefs[0], t: number): [number, number, number] {
+  const a = (orb.angle * Math.PI) / 180 + t * orb.speed;
+  return [Math.cos(a) * orb.radius, Math.sin(a) * orb.radius * 0.65, 0];
+}
 
-const PS2Orbs = () => {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
-  const animFrameRef = useRef<number>(0);
-  const [dimensions, setDimensions] = useState({ w: 0, h: 0 });
+function OrbPoint({ orb }: { orb: typeof orbDefs[0] }) {
+  const ref = useRef<THREE.Mesh>(null!);
 
-  const updateDimensions = useCallback(() => {
-    if (containerRef.current) {
-      const rect = containerRef.current.getBoundingClientRect();
-      setDimensions({ w: rect.width, h: rect.height });
-    }
-  }, []);
-
-  useEffect(() => {
-    updateDimensions();
-    window.addEventListener("resize", updateDimensions);
-    return () => window.removeEventListener("resize", updateDimensions);
-  }, [updateDimensions]);
-
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas || dimensions.w === 0) return;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-
-    canvas.width = dimensions.w * 2;
-    canvas.height = dimensions.h * 2;
-    ctx.scale(2, 2);
-
-    const cx = dimensions.w / 2;
-    const cy = dimensions.h / 2;
-
-    const draw = (time: number) => {
-      ctx.clearRect(0, 0, dimensions.w, dimensions.h);
-
-      const positions = orbDefs.map((orb) => getOrbPosition(orb, time));
-
-      // Draw filaments
-      connections.forEach(([a, b]) => {
-        const pa = positions[a];
-        const pb = positions[b];
-        const ax = cx + pa.x;
-        const ay = cy + pa.y;
-        const bx = cx + pb.x;
-        const by = cy + pb.y;
-
-        const dist = Math.hypot(bx - ax, by - ay);
-        const opacity = Math.max(0.03, 0.12 - dist * 0.0004);
-
-        ctx.beginPath();
-        ctx.moveTo(ax, ay);
-        ctx.lineTo(bx, by);
-        ctx.strokeStyle = `hsla(210, 100%, 70%, ${opacity})`;
-        ctx.lineWidth = 0.5;
-        ctx.shadowColor = "hsla(210, 100%, 65%, 0.15)";
-        ctx.shadowBlur = 4;
-        ctx.stroke();
-        ctx.shadowBlur = 0;
-      });
-
-      animFrameRef.current = requestAnimationFrame(draw);
-    };
-
-    animFrameRef.current = requestAnimationFrame(draw);
-    return () => cancelAnimationFrame(animFrameRef.current);
-  }, [dimensions]);
+  useFrame(({ clock }) => {
+    const [x, y, z] = getOrbPos(orb, clock.getElapsedTime());
+    ref.current.position.set(x, y, z);
+  });
 
   return (
-    <div ref={containerRef} className="relative w-full h-full pointer-events-none flex items-center justify-center">
-      {/* Filament canvas */}
-      <canvas
-        ref={canvasRef}
-        className="absolute inset-0 w-full h-full"
-        style={{ imageRendering: "auto" }}
-      />
+    <mesh ref={ref}>
+      <sphereGeometry args={[0.06, 16, 16]} />
+      <meshBasicMaterial color="#e0f0ff" />
+      {/* Glow sprite */}
+      <sprite scale={[0.5, 0.5, 1]}>
+        <spriteMaterial
+          color="#4da6ff"
+          transparent
+          opacity={0.4}
+          blending={THREE.AdditiveBlending}
+          depthWrite={false}
+        />
+      </sprite>
+    </mesh>
+  );
+}
 
-      {/* Orbs */}
-      {orbDefs.map((orb, i) => {
-        const startRad = (orb.angle * Math.PI) / 180;
-        const cx = Math.cos(startRad) * orb.radius;
-        const cy = Math.sin(startRad) * orb.radius * 0.7;
+function Filaments() {
+  const lineRefs = useRef<(THREE.Line | null)[]>([]);
 
-        return (
-          <motion.div
-            key={i}
-            className="absolute rounded-full"
-            style={{
-              width: orb.size,
-              height: orb.size,
-              background: `radial-gradient(circle, hsl(200 100% 95%), hsl(210 100% 75%))`,
-              boxShadow: `0 0 ${orb.glow}px ${orb.glow / 2}px hsl(210 100% 65% / 0.6)`,
-              left: "50%",
-              top: "50%",
-              marginLeft: -orb.size / 2,
-              marginTop: -orb.size / 2,
-            }}
-            animate={{
-              x: [
-                cx,
-                Math.cos(startRad + Math.PI / 2) * orb.radius,
-                Math.cos(startRad + Math.PI) * orb.radius,
-                Math.cos(startRad + (3 * Math.PI) / 2) * orb.radius,
-                cx,
-              ],
-              y: [
-                cy,
-                Math.sin(startRad + Math.PI / 2) * orb.radius * 0.7,
-                Math.sin(startRad + Math.PI) * orb.radius * 0.7,
-                Math.sin(startRad + (3 * Math.PI) / 2) * orb.radius * 0.7,
-                cy,
-              ],
-              opacity: [0.7, 1, 0.6, 0.9, 0.7],
-            }}
-            transition={{
-              duration: orb.speed,
-              repeat: Infinity,
-              ease: "linear",
-            }}
+  const geometries = useMemo(
+    () => connections.map(() => {
+      const geo = new THREE.BufferGeometry();
+      geo.setAttribute("position", new THREE.Float32BufferAttribute([0, 0, 0, 0, 0, 0], 3));
+      return geo;
+    }),
+    []
+  );
+
+  useFrame(({ clock }) => {
+    const t = clock.getElapsedTime();
+    const positions = orbDefs.map((o) => getOrbPos(o, t));
+
+    connections.forEach(([a, b], i) => {
+      const geo = geometries[i];
+      const pos = geo.attributes.position as THREE.BufferAttribute;
+      pos.setXYZ(0, positions[a][0], positions[a][1], positions[a][2]);
+      pos.setXYZ(1, positions[b][0], positions[b][1], positions[b][2]);
+      pos.needsUpdate = true;
+    });
+  });
+
+  return (
+    <>
+      {connections.map((_, i) => (
+        <line key={i} ref={(el) => { lineRefs.current[i] = el as unknown as THREE.Line; }} geometry={geometries[i]}>
+          <lineBasicMaterial
+            color="#4da6ff"
+            transparent
+            opacity={0.08}
+            blending={THREE.AdditiveBlending}
+            depthWrite={false}
           />
-        );
-      })}
+        </line>
+      ))}
+    </>
+  );
+}
+
+function Scene() {
+  return (
+    <>
+      <color attach="background" args={["#000000"]} />
+      {orbDefs.map((orb, i) => (
+        <OrbPoint key={i} orb={orb} />
+      ))}
+      <Filaments />
+    </>
+  );
+}
+
+const PS2Orbs = () => {
+  return (
+    <div className="relative w-full h-full pointer-events-none">
+      <Canvas
+        camera={{ position: [0, 0, 5], fov: 50 }}
+        gl={{ alpha: true, antialias: true }}
+        style={{ background: "transparent" }}
+      >
+        <Scene />
+      </Canvas>
     </div>
   );
 };
