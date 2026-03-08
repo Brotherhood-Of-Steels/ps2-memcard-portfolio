@@ -107,7 +107,7 @@ const Index = () => {
         </div>
         <button
           onClick={handleEnter}
-          className="font-body text-sm tracking-wider text-foreground hover:text-primary transition-colors"
+          className="font-body text-sm tracking-wider text-foreground hover:text-primary transition-colors focus:outline-none"
         >
           Enter
         </button>
