@@ -1,22 +1,9 @@
-import { useRef, useMemo } from "react";
+import { useMemo, useRef } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { EffectComposer, Bloom } from "@react-three/postprocessing";
-import { BlendFunction } from "postprocessing";
 import * as THREE from "three";
 
-const basePositions: [number, number, number][] = [
-  [-0.4, 1.8, 0],
-  [1.0, 1.3, 0.3],
-  [1.6, 0.1, -0.15],
-  [1.2, -1.0, 0.2],
-  [0.1, -1.5, -0.15],
-  [-1.1, -0.9, 0.25],
-  [-1.6, 0.3, -0.2],
-  [-1.0, 1.3, 0.15],
-];
-
-const TRAIL_LENGTH = 18;
-const CHASE_STRENGTH = 0.15;
+const ORB_COUNT = 8;
+const TRAIL_LENGTH = 22;
 
 function makeGlowTexture() {
   const size = 128;
@@ -24,46 +11,39 @@ function makeGlowTexture() {
   canvas.width = size;
   canvas.height = size;
   const ctx = canvas.getContext("2d")!;
-  const g = ctx.createRadialGradient(size / 2, size / 2, 0, size / 2, size / 2, size / 2);
-  g.addColorStop(0, "rgba(255,255,255,1)");
-  g.addColorStop(0.05, "rgba(240,250,255,0.95)");
-  g.addColorStop(0.15, "rgba(180,220,255,0.6)");
-  g.addColorStop(0.35, "rgba(100,170,255,0.25)");
-  g.addColorStop(0.6, "rgba(60,130,255,0.08)");
-  g.addColorStop(1, "rgba(0,60,200,0)");
-  ctx.fillStyle = g;
+  const gradient = ctx.createRadialGradient(size / 2, size / 2, 0, size / 2, size / 2, size / 2);
+
+  gradient.addColorStop(0, "rgba(255,255,255,1)");
+  gradient.addColorStop(0.08, "rgba(235,245,255,0.98)");
+  gradient.addColorStop(0.2, "rgba(165,210,255,0.72)");
+  gradient.addColorStop(0.45, "rgba(95,165,255,0.3)");
+  gradient.addColorStop(0.75, "rgba(50,115,230,0.1)");
+  gradient.addColorStop(1, "rgba(0,55,180,0)");
+
+  ctx.fillStyle = gradient;
   ctx.fillRect(0, 0, size, size);
+
   return new THREE.CanvasTexture(canvas);
 }
 
-function DriftingOrb({ basePos, glowTex, seed, sharedPositions, index }: {
-  basePos: [number, number, number];
+type OrbitingOrbProps = {
   glowTex: THREE.Texture;
-  seed: number;
-  sharedPositions: React.MutableRefObject<THREE.Vector3[]>;
   index: number;
-}) {
+};
+
+function OrbitingOrb({ glowTex, index }: OrbitingOrbProps) {
   const ref = useRef<THREE.Group>(null!);
   const trailRefs = useRef<THREE.Sprite[]>([]);
   const posHistory = useRef<THREE.Vector3[]>([]);
-  const velocity = useRef(new THREE.Vector3(0, 0, 0));
 
-  const offsets = useMemo(() => ({
-    xFreq: 0.6 + (seed * 0.13) % 0.5,
-    yFreq: 0.55 + ((seed * 0.19) % 0.45),
-    zFreq: 0.4 + ((seed * 0.11) % 0.3),
-    xPhase: (seed * 1.7) % (Math.PI * 2),
-    yPhase: (seed * 2.3) % (Math.PI * 2),
-    zPhase: (seed * 3.1) % (Math.PI * 2),
-    xAmp: 0.35 + (seed * 0.08) % 0.5,
-    yAmp: 0.35 + (seed * 0.1) % 0.5,
-    zAmp: 0.2 + (seed * 0.06) % 0.3,
-  }), [seed]);
+  const phase = useMemo(() => (index / ORB_COUNT) * Math.PI * 2, [index]);
+  const speed = useMemo(() => 1.05 + index * 0.02, [index]);
 
   const trailSprites = useMemo(() => {
     const sprites: THREE.Sprite[] = [];
+
     for (let i = 0; i < TRAIL_LENGTH; i++) {
-      const mat = new THREE.SpriteMaterial({
+      const material = new THREE.SpriteMaterial({
         map: glowTex,
         transparent: true,
         opacity: 0,
@@ -71,78 +51,58 @@ function DriftingOrb({ basePos, glowTex, seed, sharedPositions, index }: {
         depthWrite: false,
         toneMapped: false,
       });
-      const sprite = new THREE.Sprite(mat);
-      const scale = 0.7 * (1 - i / TRAIL_LENGTH);
+
+      const sprite = new THREE.Sprite(material);
+      const scale = 0.95 * (1 - i / TRAIL_LENGTH);
       sprite.scale.set(scale, scale, 1);
       sprites.push(sprite);
     }
+
     trailRefs.current = sprites;
     return sprites;
   }, [glowTex]);
 
   useFrame(({ clock }) => {
     const t = clock.getElapsedTime();
-    // Base sine drift
-    const dx = basePos[0] + Math.sin(t * offsets.xFreq + offsets.xPhase) * offsets.xAmp;
-    const dy = basePos[1] + Math.sin(t * offsets.yFreq + offsets.yPhase) * offsets.yAmp;
-    const dz = basePos[2] + Math.sin(t * offsets.zFreq + offsets.zPhase) * offsets.zAmp;
+    const angle = t * speed + phase;
 
-    // Chase: attract toward nearest 2 orbs
-    const chaseForce = new THREE.Vector3(0, 0, 0);
-    const myPos = sharedPositions.current[index] || new THREE.Vector3(dx, dy, dz);
-    
-    const distances: { dist: number; dir: THREE.Vector3 }[] = [];
-    for (let i = 0; i < sharedPositions.current.length; i++) {
-      if (i === index) continue;
-      const other = sharedPositions.current[i];
-      if (!other) continue;
-      const dir = new THREE.Vector3().subVectors(other, myPos);
-      const dist = dir.length();
-      if (dist > 0.01) distances.push({ dist, dir: dir.normalize() });
-    }
-    distances.sort((a, b) => a.dist - b.dist);
-    for (let i = 0; i < Math.min(2, distances.length); i++) {
-      chaseForce.add(distances[i].dir.multiplyScalar(CHASE_STRENGTH * Math.min(1, 1 / (distances[i].dist + 0.5))));
-    }
-
-    velocity.current.lerp(chaseForce, 0.02);
-    const x = dx + velocity.current.x;
-    const y = dy + velocity.current.y;
-    const z = dz + velocity.current.z;
+    const radius = 1.55 + Math.sin(t * 0.7 + index * 0.9) * 0.12;
+    const x = Math.cos(angle) * radius + Math.sin(t * 0.9 + index) * 0.08;
+    const y = Math.sin(angle) * (1.18 + Math.cos(t * 0.8 + index) * 0.1) + Math.cos(t * 0.6 + index) * 0.05;
+    const z = Math.sin(angle * 1.8 + t * 0.7 + index) * 0.16;
 
     ref.current.position.set(x, y, z);
-    sharedPositions.current[index] = new THREE.Vector3(x, y, z);
 
-    // Trail
     posHistory.current.unshift(new THREE.Vector3(x, y, z));
-    if (posHistory.current.length > TRAIL_LENGTH * 3) {
-      posHistory.current.length = TRAIL_LENGTH * 3;
+    if (posHistory.current.length > TRAIL_LENGTH * 2) {
+      posHistory.current.length = TRAIL_LENGTH * 2;
     }
-    trailRefs.current.forEach((sprite, i) => {
-      const histIdx = (i + 1) * 3;
-      if (posHistory.current[histIdx]) {
-        sprite.position.copy(posHistory.current[histIdx]);
-        const fade = 0.5 * (1 - i / TRAIL_LENGTH);
-        (sprite.material as THREE.SpriteMaterial).opacity = fade;
-      }
+
+    trailRefs.current.forEach((sprite, trailIndex) => {
+      const historyPoint = posHistory.current[trailIndex + 1];
+      if (!historyPoint) return;
+
+      sprite.position.copy(historyPoint);
+      const fade = 0.62 * (1 - trailIndex / TRAIL_LENGTH);
+      (sprite.material as THREE.SpriteMaterial).opacity = fade;
     });
   });
 
   return (
     <group>
-      {trailSprites.map((sprite, i) => (
-        <primitive key={`trail-${i}`} object={sprite} />
+      {trailSprites.map((sprite, trailIndex) => (
+        <primitive key={`trail-${index}-${trailIndex}`} object={sprite} />
       ))}
+
       <group ref={ref}>
-        {/* No solid mesh — sprites only to avoid shadow/box artifact */}
-        <sprite scale={[0.8, 0.8, 1]}>
+        <sprite scale={[1.0, 1.0, 1]}>
           <spriteMaterial map={glowTex} transparent opacity={1} blending={THREE.AdditiveBlending} depthWrite={false} toneMapped={false} />
         </sprite>
-        <sprite scale={[1.6, 1.6, 1]}>
-          <spriteMaterial map={glowTex} transparent opacity={0.5} blending={THREE.AdditiveBlending} depthWrite={false} toneMapped={false} />
+        <sprite scale={[2.0, 2.0, 1]}>
+          <spriteMaterial map={glowTex} transparent opacity={0.62} blending={THREE.AdditiveBlending} depthWrite={false} toneMapped={false} />
         </sprite>
-        <sprite scale={[3.0, 3.0, 1]}>
-          <spriteMaterial map={glowTex} transparent opacity={0.15} blending={THREE.AdditiveBlending} depthWrite={false} toneMapped={false} />
+        <sprite scale={[3.6, 3.6, 1]}>
+          <spriteMaterial map={glowTex} transparent opacity={0.22} blending={THREE.AdditiveBlending} depthWrite={false} toneMapped={false} />
         </sprite>
       </group>
     </group>
@@ -151,16 +111,12 @@ function DriftingOrb({ basePos, glowTex, seed, sharedPositions, index }: {
 
 function OrbSystem() {
   const glowTex = useMemo(() => makeGlowTexture(), []);
-  const sharedPositions = useRef<THREE.Vector3[]>(basePositions.map(p => new THREE.Vector3(...p)));
 
   return (
     <>
-      {basePositions.map((pos, i) => (
-        <DriftingOrb key={i} basePos={pos} glowTex={glowTex} seed={i + 1} sharedPositions={sharedPositions} index={i} />
+      {Array.from({ length: ORB_COUNT }).map((_, index) => (
+        <OrbitingOrb key={index} glowTex={glowTex} index={index} />
       ))}
-      <EffectComposer frameBufferType={THREE.HalfFloatType}>
-        <Bloom intensity={1.5} luminanceThreshold={0.08} luminanceSmoothing={0.9} mipmapBlur blendFunction={BlendFunction.ADD} />
-      </EffectComposer>
     </>
   );
 }
@@ -169,8 +125,8 @@ const PS2Orbs = () => {
   return (
     <div className="relative w-full h-full pointer-events-none">
       <Canvas
-        camera={{ position: [0, 0, 5.5], fov: 50 }}
-        gl={{ alpha: true, antialias: true, toneMapping: THREE.NoToneMapping, setClearColor: undefined } as any}
+        camera={{ position: [0, 0, 5.4], fov: 50 }}
+        gl={{ alpha: true, antialias: true, premultipliedAlpha: true, toneMapping: THREE.NoToneMapping }}
         onCreated={({ gl }) => {
           gl.setClearColor(0x000000, 0);
         }}
