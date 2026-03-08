@@ -4,9 +4,9 @@ import { motion } from "framer-motion";
 import PS2Orbs from "@/components/PS2Orbs";
 
 const menuItems = [
-  { id: "browser", label: "Browser", path: "/browse" },
-  { id: "games", label: "Games", path: "/games" },
-];
+{ id: "browser", label: "Browser", path: "/browse" },
+{ id: "games", label: "Games", path: "/games" }];
+
 
 const Index = () => {
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -34,20 +34,20 @@ const Index = () => {
     <main
       className="relative min-h-screen bg-background overflow-hidden flex flex-col"
       role="application"
-      aria-label="PS2 Menu"
-    >
+      aria-label="PS2 Menu">
+      
       <div className="ps2-crt-overlay" />
       <div className="ps2-scanline" />
 
       {/* Enter flash overlay */}
-      {enterFlash && (
-        <motion.div
-          className="fixed inset-0 z-50 bg-foreground"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: [0, 0.6, 0] }}
-          transition={{ duration: 0.3 }}
-        />
-      )}
+      {enterFlash &&
+      <motion.div
+        className="fixed inset-0 z-50 bg-foreground"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: [0, 0.6, 0] }}
+        transition={{ duration: 0.3 }} />
+
+      }
 
       {/* Center content — orbs and menu side by side, close together */}
       <div className="flex-1 flex items-center justify-center">
@@ -62,42 +62,42 @@ const Index = () => {
 
           {/* Menu text — below orbs layer */}
           <div className="flex flex-col gap-1 relative z-20 pointer-events-auto">
-            {menuItems.map((item, index) => (
-              <button
-                key={item.id}
-                onClick={() => {
-                  setSelectedIndex(index);
-                  navigate(item.path);
-                }}
-                className="text-left focus:outline-none py-0.5"
-              >
+            {menuItems.map((item, index) =>
+            <button
+              key={item.id}
+              onClick={() => {
+                setSelectedIndex(index);
+                navigate(item.path);
+              }}
+              className="text-left focus:outline-none py-0.5">
+              
                 <motion.span
-                  className={`block font-body tracking-wider transition-all ${
-                    selectedIndex === index
-                      ? "text-foreground text-2xl md:text-3xl font-bold"
-                      : "text-muted-foreground text-lg md:text-xl"
-                  }`}
-                  animate={
-                    selectedIndex === index
-                      ? { textShadow: "0 0 20px hsl(210 100% 65% / 0.5)" }
-                      : { textShadow: "none" }
-                  }
-                >
+                className={`block font-body tracking-wider transition-all ${
+                selectedIndex === index ?
+                "text-foreground text-2xl md:text-3xl font-bold" :
+                "text-muted-foreground text-lg md:text-xl"}`
+                }
+                animate={
+                selectedIndex === index ?
+                { textShadow: "0 0 20px hsl(210 100% 65% / 0.5)" } :
+                { textShadow: "none" }
+                }>
+                
                   {item.label}
                 </motion.span>
               </button>
-            ))}
+            )}
           </div>
         </div>
       </div>
 
       {/* Bottom bar — centered */}
       <motion.nav
-        className="flex items-center justify-center gap-16 px-8 py-5"
+        className="flex items-center justify-center gap-16 px-8 py-5 opacity-65 rounded-none"
         initial={{ y: 30, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        transition={{ delay: 0.4 }}
-      >
+        transition={{ delay: 0.4 }}>
+        
         <div className="flex items-center gap-3">
           <div className="flex flex-col items-center gap-0.5">
             <span className="inline-flex items-center justify-center w-5 h-5 border border-foreground/60 rounded-sm text-[10px] text-foreground leading-none font-semibold">▲</span>
@@ -107,13 +107,13 @@ const Index = () => {
         </div>
         <button
           onClick={handleEnter}
-          className="font-body text-sm tracking-wider text-foreground font-semibold hover:text-primary transition-colors focus:outline-none"
-        >
+          className="font-body text-sm tracking-wider text-foreground font-semibold hover:text-primary transition-colors focus:outline-none">
+          
           Enter
         </button>
       </motion.nav>
-    </main>
-  );
+    </main>);
+
 };
 
 export default Index;
