@@ -13,6 +13,10 @@ export default {
       },
     },
     extend: {
+      fontFamily: {
+        ps2: ['"Share Tech Mono"', 'monospace'],
+        body: ['Inter', 'sans-serif'],
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
@@ -47,6 +51,17 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        ps2: {
+          glow: "hsl(var(--ps2-glow))",
+          dark: "hsl(var(--ps2-dark))",
+          menu: "hsl(var(--ps2-menu-bg))",
+          "menu-fg": "hsl(var(--ps2-menu-fg))",
+          highlight: "hsl(var(--ps2-highlight))",
+          orb: "hsl(var(--ps2-orb))",
+          bar: "hsl(var(--ps2-bar))",
+          gray: "hsl(var(--ps2-gray))",
+          selected: "hsl(var(--ps2-selected))",
+        },
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
           foreground: "hsl(var(--sidebar-foreground))",
@@ -65,25 +80,32 @@ export default {
       },
       keyframes: {
         "accordion-down": {
-          from: {
-            height: "0",
-          },
-          to: {
-            height: "var(--radix-accordion-content-height)",
-          },
+          from: { height: "0" },
+          to: { height: "var(--radix-accordion-content-height)" },
         },
         "accordion-up": {
-          from: {
-            height: "var(--radix-accordion-content-height)",
-          },
-          to: {
-            height: "0",
-          },
+          from: { height: "var(--radix-accordion-content-height)" },
+          to: { height: "0" },
+        },
+        "ps2-float": {
+          "0%, 100%": { transform: "translateY(0px) rotateY(0deg)" },
+          "50%": { transform: "translateY(-8px) rotateY(180deg)" },
+        },
+        "ps2-spin": {
+          "0%": { transform: "perspective(200px) rotateY(0deg) rotateX(10deg)" },
+          "100%": { transform: "perspective(200px) rotateY(360deg) rotateX(10deg)" },
+        },
+        "ps2-bounce": {
+          "0%, 100%": { transform: "translateY(0) scale(1)" },
+          "50%": { transform: "translateY(-6px) scale(1.05)" },
         },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        "ps2-float": "ps2-float 4s ease-in-out infinite",
+        "ps2-spin": "ps2-spin 6s linear infinite",
+        "ps2-bounce": "ps2-bounce 2s ease-in-out infinite",
       },
     },
   },
