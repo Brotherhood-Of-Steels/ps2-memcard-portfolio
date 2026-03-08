@@ -49,40 +49,44 @@ const Index = () => {
         />
       )}
 
-      {/* Center content — orbs span full area, menu overlaid */}
-      <div className="flex-1 flex items-center justify-center relative">
-        {/* Orbs - full width behind everything */}
-        <div className="absolute inset-0">
-          <PS2Orbs />
-        </div>
+      {/* Center content — orbs left, menu right, orbs overflow to reach menu */}
+      <div className="flex-1 flex items-center justify-center">
+        <div className="flex items-center gap-6 md:gap-10 relative">
+          {/* Orbs - positioned left but canvas overflows right to cover menu */}
+          <div className="relative w-52 h-48 md:w-64 md:h-56 overflow-visible">
+            <div className="absolute -inset-[200%] pointer-events-none">
+              <PS2Orbs />
+            </div>
+          </div>
 
-        {/* Menu text - centered, on top of orbs */}
-        <div className="flex flex-col gap-1 relative z-10">
-          {menuItems.map((item, index) => (
-            <button
-              key={item.id}
-              onClick={() => {
-                setSelectedIndex(index);
-                navigate(item.path);
-              }}
-              className="text-left focus:outline-none py-0.5"
-            >
-              <motion.span
-                className={`block font-body tracking-wider transition-all ${
-                  selectedIndex === index
-                    ? "text-foreground text-2xl md:text-3xl font-bold"
-                    : "text-muted-foreground text-lg md:text-xl"
-                }`}
-                animate={
-                  selectedIndex === index
-                    ? { textShadow: "0 0 20px hsl(210 100% 65% / 0.5)" }
-                    : { textShadow: "none" }
-                }
+          {/* Menu text - on top of orbs */}
+          <div className="flex flex-col gap-1 relative z-10">
+            {menuItems.map((item, index) => (
+              <button
+                key={item.id}
+                onClick={() => {
+                  setSelectedIndex(index);
+                  navigate(item.path);
+                }}
+                className="text-left focus:outline-none py-0.5"
               >
-                {item.label}
-              </motion.span>
-            </button>
-          ))}
+                <motion.span
+                  className={`block font-body tracking-wider transition-all ${
+                    selectedIndex === index
+                      ? "text-foreground text-2xl md:text-3xl font-bold"
+                      : "text-muted-foreground text-lg md:text-xl"
+                  }`}
+                  animate={
+                    selectedIndex === index
+                      ? { textShadow: "0 0 20px hsl(210 100% 65% / 0.5)" }
+                      : { textShadow: "none" }
+                  }
+                >
+                  {item.label}
+                </motion.span>
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 
