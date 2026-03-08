@@ -4,7 +4,7 @@ import * as THREE from "three";
 
 const ORB_COUNT = 8;
 const TRAIL_LENGTH = 22;
-const BASE_SPEED = 2.2;
+const BASE_SPEED = 3.2;
 
 function makeGlowTexture() {
   const size = 128;
