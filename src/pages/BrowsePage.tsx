@@ -1,11 +1,13 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { FileText } from "lucide-react";
+import { FileText, BookOpen, Pen } from "lucide-react";
 
 
 const browseItems = [
   { id: "cv", label: "My CV", icon: FileText, color: "hsl(210, 80%, 65%)", action: "download-cv" },
+  { id: "blog", label: "My Blog", icon: BookOpen, color: "hsl(140, 70%, 55%)", action: "link", url: "https://yourblog.com" },
+  { id: "medium", label: "Medium", icon: Pen, color: "hsl(0, 0%, 90%)", action: "link", url: "https://medium.com" },
 ];
 
 const BrowsePage = () => {
@@ -17,11 +19,12 @@ const BrowsePage = () => {
   const handleEnter = () => {
     const item = browseItems[selectedIndex];
     if (item.action === "download-cv") {
-      // Trigger CV download
       const link = document.createElement("a");
       link.href = "/cv.pdf";
       link.download = "CV.pdf";
       link.click();
+    } else if (item.action === "link" && item.url) {
+      window.open(item.url, "_blank");
     }
   };
 
@@ -88,29 +91,29 @@ const BrowsePage = () => {
                 }}
                 style={{ perspective: "200px", transformStyle: "preserve-3d" }}
               >
-                {/* 3D cube-like CV icon */}
+                {/* PS2 memory card save icon style */}
                 <div className="relative w-16 h-16">
-                  {/* Paper/document shape */}
+                  {/* Base card shape */}
                   <div 
-                    className="absolute inset-0 bg-gradient-to-br from-white to-gray-200 rounded-sm shadow-lg"
-                    style={{ transform: "rotateX(10deg)" }}
+                    className="absolute inset-0 rounded-sm shadow-lg overflow-hidden"
+                    style={{ 
+                      background: `linear-gradient(135deg, ${item.color}, ${item.color}88)`,
+                      transform: "rotateX(10deg)" 
+                    }}
                   >
-                    {/* Document lines */}
-                    <div className="absolute top-3 left-2 right-2 space-y-1.5">
-                      <div className="h-1 bg-gray-400 rounded w-3/4" />
-                      <div className="h-1 bg-gray-300 rounded w-full" />
-                      <div className="h-1 bg-gray-300 rounded w-5/6" />
-                      <div className="h-1 bg-gray-300 rounded w-full" />
-                      <div className="h-1 bg-gray-300 rounded w-2/3" />
+                    {/* Icon centered */}
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <item.icon size={28} className="text-ps2-menu-fg/90 drop-shadow-md" />
                     </div>
-                    {/* CV text */}
-                    <div className="absolute bottom-2 left-2 font-body text-[8px] text-muted-foreground font-bold">
-                      CV
+                    {/* Bottom label */}
+                    <div className="absolute bottom-1 left-0 right-0 text-center font-body text-[7px] text-ps2-menu-fg/70 font-bold uppercase tracking-wider">
+                      {item.id}
                     </div>
                   </div>
-                  {/* Blue accent on side */}
+                  {/* Side accent */}
                   <div 
-                    className="absolute left-0 top-0 bottom-0 w-1.5 bg-gradient-to-b from-blue-400 to-blue-600 rounded-l-sm"
+                    className="absolute left-0 top-0 bottom-0 w-1.5 rounded-l-sm"
+                    style={{ background: `linear-gradient(to bottom, ${item.color}, ${item.color}66)` }}
                   />
                 </div>
                 
