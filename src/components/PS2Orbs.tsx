@@ -30,6 +30,7 @@ function makeGlowTexture() {
 type OrbitingOrbProps = {
   glowTex: THREE.Texture;
   index: number;
+  targetY: React.MutableRefObject<number>;
 };
 
 function OrbitingOrb({ glowTex, index }: OrbitingOrbProps) {
