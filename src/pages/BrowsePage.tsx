@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { FileText } from "lucide-react";
-import PS2BottomBar from "@/components/PS2BottomBar";
+
 
 const browseItems = [
   { id: "cv", label: "My CV", icon: FileText, color: "hsl(210, 80%, 65%)", action: "download-cv" },
@@ -39,23 +39,23 @@ const BrowsePage = () => {
   return (
     <main className="min-h-screen bg-ps2-gray flex flex-col" role="application" aria-label="Browse Memory Card">
       {/* Header */}
-      <header className="flex items-center justify-between px-6 py-4">
+      <header className="flex items-center justify-between px-10 pt-6 pb-2">
         <div className="flex items-center gap-3">
-          <div className="w-12 h-8 bg-[hsl(220,15%,25%)] rounded-sm" aria-hidden="true" />
-          <div className="font-body text-ps2-menu-fg">
-            <h1 className="text-sm font-bold">Memory Card (PS2)/1</h1>
-            <p className="text-xs text-ps2-menu-fg/70">1,035 KB Free</p>
+          <div className="w-10 h-7 bg-[hsl(220,15%,25%)] rounded-sm" aria-hidden="true" />
+          <div className="font-body text-ps2-menu-fg leading-tight">
+            <p className="text-base font-bold">Memory Card (PS2)/1</p>
+            <p className="text-sm text-ps2-menu-fg/80">1,035 KB Free</p>
           </div>
         </div>
-        <div className="font-body text-ps2-menu-fg text-right">
-          <p className="text-sm font-bold">Your System</p>
-          <p className="text-sm font-bold">Configuration</p>
+        <div className="font-body text-ps2-menu-fg text-right leading-tight">
+          <p className="text-base font-bold">Your System</p>
+          <p className="text-base font-bold">Configuration</p>
         </div>
       </header>
 
       {/* Items Grid */}
-      <section className="flex-1 flex items-start justify-center px-8 pt-8">
-        <div className="grid grid-cols-5 gap-6 md:gap-8">
+      <section className="flex-1 flex items-start justify-start px-10 pt-6">
+        <div className="grid grid-cols-5 gap-x-8 gap-y-6">
           {browseItems.map((item, index) => (
             <motion.button
               key={item.id}
@@ -130,9 +130,9 @@ const BrowsePage = () => {
       </section>
 
       {/* Down arrow */}
-      <div className="flex justify-center mb-4">
+      <div className="flex justify-center pb-2">
         <motion.div
-          className="text-primary text-2xl"
+          className="text-primary text-xl"
           animate={{ y: [0, 5, 0] }}
           transition={{ duration: 1, repeat: Infinity }}
         >
@@ -140,13 +140,21 @@ const BrowsePage = () => {
         </motion.div>
       </div>
 
-      <PS2BottomBar
-        actions={[
-          { icon: "✕", label: "Enter", onClick: handleEnter },
-          { icon: "○", label: "Back", onClick: handleBack },
-          { icon: "△", label: "Options" },
-        ]}
-      />
+      {/* Bottom bar — inline, not fixed */}
+      <nav className="flex items-center justify-center gap-20 px-10 py-4 font-body">
+        <button onClick={handleEnter} className="flex items-center gap-2 text-ps2-menu-fg text-base tracking-wide hover:text-primary transition-colors">
+          <span className="font-bold text-lg">✕</span>
+          <span className="font-bold">Enter</span>
+        </button>
+        <button onClick={handleBack} className="flex items-center gap-2 text-ps2-menu-fg text-base tracking-wide hover:text-primary transition-colors">
+          <span className="font-bold text-lg">○</span>
+          <span className="font-bold">Back</span>
+        </button>
+        <span className="flex items-center gap-2 text-ps2-menu-fg text-base tracking-wide">
+          <span className="font-bold text-lg">△</span>
+          <span className="font-bold">Options</span>
+        </span>
+      </nav>
     </main>
   );
 };
