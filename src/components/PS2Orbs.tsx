@@ -73,7 +73,7 @@ function Filaments() {
     const positions = orbDefs.map((o) => getOrbPos(o, t));
 
     connections.forEach(([a, b], i) => {
-      const geo = geometries[i];
+      const geo = lines[i].geometry;
       const pos = geo.attributes.position as THREE.BufferAttribute;
       pos.setXYZ(0, positions[a][0], positions[a][1], positions[a][2]);
       pos.setXYZ(1, positions[b][0], positions[b][1], positions[b][2]);
@@ -83,16 +83,8 @@ function Filaments() {
 
   return (
     <>
-      {connections.map((_, i) => (
-        <line key={i} ref={(el) => { lineRefs.current[i] = el as unknown as THREE.Line; }} geometry={geometries[i]}>
-          <lineBasicMaterial
-            color="#4da6ff"
-            transparent
-            opacity={0.08}
-            blending={THREE.AdditiveBlending}
-            depthWrite={false}
-          />
-        </line>
+      {lines.map((lineObj, i) => (
+        <primitive key={i} object={lineObj} />
       ))}
     </>
   );
