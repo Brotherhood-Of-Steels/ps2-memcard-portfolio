@@ -98,7 +98,11 @@ const BrowsePage = () => {
                   >
                     {/* Icon centered */}
                     <div className="absolute inset-0 flex items-center justify-center">
-                      <item.icon size={28} className="text-ps2-menu-fg/90 drop-shadow-md" />
+                      {item.customIcon === "cv" ? (
+                        <CVIcon className="w-full h-full" />
+                      ) : item.icon ? (
+                        <item.icon size={28} className="text-ps2-menu-fg/90 drop-shadow-md" />
+                      ) : null}
                     </div>
                     {/* Bottom label */}
                     <div className="absolute bottom-1 left-0 right-0 text-center font-body text-[7px] text-ps2-menu-fg/70 font-bold uppercase tracking-wider">
