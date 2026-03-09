@@ -8,8 +8,8 @@ import MediumIcon from "@/components/MediumIcon";
 
 const browseItems = [
   { id: "cv", label: "My CV", customIcon: "cv", color: "hsl(210, 80%, 65%)", action: "download-cv" },
-  { id: "blog", label: "My Blog", customIcon: "blog", color: "hsl(140, 70%, 55%)", action: "link", url: "https://yourblog.com" },
-  { id: "medium", label: "Medium", customIcon: "medium", color: "hsl(0, 0%, 90%)", action: "link", url: "https://medium.com" },
+  { id: "blog", label: "My Blog", customIcon: "blog", color: "hsl(140, 70%, 55%)", action: "link", url: "https://damarowen.blog/blogs" },
+  { id: "medium", label: "Medium", customIcon: "medium", color: "hsl(0, 0%, 90%)", action: "link", url: "https://medium.com/@damarowen" },
 ];
 
 const BrowsePage = () => {

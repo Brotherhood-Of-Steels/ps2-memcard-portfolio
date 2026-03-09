@@ -5,7 +5,7 @@ import PS2Orbs from "@/components/PS2Orbs";
 
 const menuItems = [
 { id: "browser", label: "Browser", path: "/browse" },
-{ id: "blog", label: "My Blog", path: "https://medium.com" },
+{ id: "blog", label: "My Blog", path: "https://damarowen.blog/blogs" },
 { id: "games", label: "Games", path: "/games" }];
 
 
