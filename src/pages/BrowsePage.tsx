@@ -101,8 +101,10 @@ const BrowsePage = () => {
                     <div className="absolute inset-0 flex items-center justify-center">
                       {item.customIcon === "cv" ? (
                         <CVIcon className="w-full h-full" />
-                      ) : item.icon ? (
-                        <item.icon size={28} className="text-ps2-menu-fg/90 drop-shadow-md" />
+                      ) : item.customIcon === "blog" ? (
+                        <BlogIcon className="w-full h-full" />
+                      ) : item.customIcon === "medium" ? (
+                        <MediumIcon className="w-full h-full" />
                       ) : null}
                     </div>
                     {/* Bottom label */}
