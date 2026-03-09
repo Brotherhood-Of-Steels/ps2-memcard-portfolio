@@ -6,7 +6,7 @@ import CVIcon from "@/components/CVIcon";
 
 
 const browseItems = [
-  { id: "cv", label: "My CV", icon: FileText, color: "hsl(210, 80%, 65%)", action: "download-cv" },
+  { id: "cv", label: "My CV", icon: null, color: "hsl(210, 80%, 65%)", action: "download-cv", customIcon: "cv" },
   { id: "blog", label: "My Blog", icon: BookOpen, color: "hsl(140, 70%, 55%)", action: "link", url: "https://yourblog.com" },
   { id: "medium", label: "Medium", icon: Pen, color: "hsl(0, 0%, 90%)", action: "link", url: "https://medium.com" },
 ];
