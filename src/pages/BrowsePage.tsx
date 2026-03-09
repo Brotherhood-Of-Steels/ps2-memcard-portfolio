@@ -1,15 +1,15 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { BookOpen, Pen } from "lucide-react";
 import CVIcon from "@/components/CVIcon";
-
+import BlogIcon from "@/components/BlogIcon";
+import MediumIcon from "@/components/MediumIcon";
 
 
 const browseItems = [
-  { id: "cv", label: "My CV", icon: null, color: "hsl(210, 80%, 65%)", action: "download-cv", customIcon: "cv" },
-  { id: "blog", label: "My Blog", icon: BookOpen, color: "hsl(140, 70%, 55%)", action: "link", url: "https://yourblog.com" },
-  { id: "medium", label: "Medium", icon: Pen, color: "hsl(0, 0%, 90%)", action: "link", url: "https://medium.com" },
+  { id: "cv", label: "My CV", customIcon: "cv", color: "hsl(210, 80%, 65%)", action: "download-cv" },
+  { id: "blog", label: "My Blog", customIcon: "blog", color: "hsl(140, 70%, 55%)", action: "link", url: "https://yourblog.com" },
+  { id: "medium", label: "Medium", customIcon: "medium", color: "hsl(0, 0%, 90%)", action: "link", url: "https://medium.com" },
 ];
 
 const BrowsePage = () => {
