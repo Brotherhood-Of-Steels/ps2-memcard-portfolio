@@ -88,7 +88,7 @@ const BrowsePage = () => {
                 style={{ perspective: "200px", transformStyle: "preserve-3d" }}
               >
                 {/* PS2 memory card save icon style */}
-                <div className="relative w-20 h-20">
+                <div className="relative w-24 h-24">
                   {/* Base card shape */}
                   <div 
                     className="absolute inset-0 rounded-sm shadow-lg overflow-hidden"
