@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { FileText, BookOpen, Pen } from "lucide-react";
+import { BookOpen, Pen } from "lucide-react";
+import CVIcon from "@/components/CVIcon";
 
 
 const browseItems = [
-  { id: "cv", label: "My CV", icon: FileText, color: "hsl(210, 80%, 65%)", action: "download-cv" },
+  { id: "cv", label: "My CV", icon: null, color: "hsl(210, 80%, 65%)", action: "download-cv", customIcon: "cv" },
   { id: "blog", label: "My Blog", icon: BookOpen, color: "hsl(140, 70%, 55%)", action: "link", url: "https://yourblog.com" },
   { id: "medium", label: "Medium", icon: Pen, color: "hsl(0, 0%, 90%)", action: "link", url: "https://medium.com" },
 ];
@@ -97,7 +98,11 @@ const BrowsePage = () => {
                   >
                     {/* Icon centered */}
                     <div className="absolute inset-0 flex items-center justify-center">
-                      <item.icon size={28} className="text-ps2-menu-fg/90 drop-shadow-md" />
+                      {item.customIcon === "cv" ? (
+                        <CVIcon className="w-full h-full" />
+                      ) : item.icon ? (
+                        <item.icon size={28} className="text-ps2-menu-fg/90 drop-shadow-md" />
+                      ) : null}
                     </div>
                     {/* Bottom label */}
                     <div className="absolute bottom-1 left-0 right-0 text-center font-body text-[7px] text-ps2-menu-fg/70 font-bold uppercase tracking-wider">
