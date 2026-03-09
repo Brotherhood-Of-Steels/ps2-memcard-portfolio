@@ -5,6 +5,7 @@ import { BookOpen, Pen } from "lucide-react";
 import CVIcon from "@/components/CVIcon";
 
 
+
 const browseItems = [
   { id: "cv", label: "My CV", icon: null, color: "hsl(210, 80%, 65%)", action: "download-cv", customIcon: "cv" },
   { id: "blog", label: "My Blog", icon: BookOpen, color: "hsl(140, 70%, 55%)", action: "link", url: "https://yourblog.com" },
