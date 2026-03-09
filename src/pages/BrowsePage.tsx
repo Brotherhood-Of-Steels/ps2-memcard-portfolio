@@ -71,7 +71,7 @@ const BrowsePage = () => {
               aria-label={item.label}
             >
               <motion.div
-                className={`relative w-20 h-20 flex items-center justify-center ${
+                className={`relative w-28 h-28 flex items-center justify-center ${
                   selectedIndex === index ? "ring-2 ring-ps2-selected rounded-sm" : ""
                 }`}
                 animate={selectedIndex === index ? {
@@ -88,7 +88,7 @@ const BrowsePage = () => {
                 style={{ perspective: "200px", transformStyle: "preserve-3d" }}
               >
                 {/* PS2 memory card save icon style */}
-                <div className="relative w-20 h-20">
+                <div className="relative w-24 h-24">
                   {/* Base card shape */}
                   <div 
                     className="absolute inset-0 rounded-sm shadow-lg overflow-hidden"
