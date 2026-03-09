@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { FileText, BookOpen, Pen } from "lucide-react";
+import { BookOpen, Pen } from "lucide-react";
+import CVIcon from "@/components/CVIcon";
 
 
 const browseItems = [
