@@ -5,6 +5,7 @@ import CVIcon from "@/components/CVIcon";
 import BlogIcon from "@/components/BlogIcon";
 import MediumIcon from "@/components/MediumIcon";
 import GitHubIcon from "@/components/GitHubIcon";
+import PortfolioIcon from "@/components/PortfolioIcon";
 
 
 const browseItems = [
@@ -12,6 +13,7 @@ const browseItems = [
   { id: "blog", label: "My Blog", customIcon: "blog", color: "hsl(140, 70%, 55%)", action: "link", url: "https://damarowen.blog/blogs" },
   { id: "medium", label: "Medium", customIcon: "medium", color: "hsl(0, 0%, 90%)", action: "link", url: "https://medium.com/@damarowen" },
   { id: "github", label: "GitHub", customIcon: "github", color: "hsl(0, 0%, 10%)", action: "link", url: "https://github.com/damarowen" },
+  { id: "portfolio", label: "My Portofolio", customIcon: "portfolio", color: "hsl(220, 80%, 60%)", action: "link", url: "https://damarowen.github.io/myPortofolio/" },
 ];
 
 const BrowsePage = () => {
@@ -98,6 +100,8 @@ const BrowsePage = () => {
                     <MediumIcon className="w-full h-full" />
                   ) : item.customIcon === "github" ? (
                     <GitHubIcon className="w-full h-full" />
+                  ) : item.customIcon === "portfolio" ? (
+                    <PortfolioIcon className="w-full h-full" />
                   ) : null}
                 </div>
                 
