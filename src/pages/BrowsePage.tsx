@@ -107,6 +107,8 @@ const BrowsePage = () => {
                         <BlogIcon className="w-full h-full" />
                       ) : item.customIcon === "medium" ? (
                         <MediumIcon className="w-full h-full" />
+                      ) : item.customIcon === "github" ? (
+                        <GitHubIcon className="w-full h-full" />
                       ) : null}
                     </div>
                     {/* Bottom label */}
