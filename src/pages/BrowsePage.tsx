@@ -4,12 +4,14 @@ import { motion } from "framer-motion";
 import CVIcon from "@/components/CVIcon";
 import BlogIcon from "@/components/BlogIcon";
 import MediumIcon from "@/components/MediumIcon";
+import GitHubIcon from "@/components/GitHubIcon";
 
 
 const browseItems = [
   { id: "cv", label: "My CV", customIcon: "cv", color: "hsl(210, 80%, 65%)", action: "download-cv" },
   { id: "blog", label: "My Blog", customIcon: "blog", color: "hsl(140, 70%, 55%)", action: "link", url: "https://damarowen.blog/blogs" },
   { id: "medium", label: "Medium", customIcon: "medium", color: "hsl(0, 0%, 90%)", action: "link", url: "https://medium.com/@damarowen" },
+  { id: "github", label: "GitHub", customIcon: "github", color: "hsl(0, 0%, 10%)", action: "link", url: "https://github.com/damarowen" },
 ];
 
 const BrowsePage = () => {
