@@ -89,39 +89,42 @@ const BrowsePage = () => {
                 }}
                 style={{ perspective: "200px", transformStyle: "preserve-3d" }}
               >
-                {/* PS2 memory card save icon style */}
-                <div className="relative w-24 h-24">
-                  {/* Base card shape */}
-                  <div 
-                    className="absolute inset-0 rounded-sm shadow-lg overflow-hidden"
-                    style={{ 
-                      background: `linear-gradient(135deg, ${item.color}, ${item.color}88)`,
-                      transform: "rotateX(10deg)" 
-                    }}
-                  >
-                    {/* Icon centered */}
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      {item.customIcon === "cv" ? (
-                        <CVIcon className="w-full h-full" />
-                      ) : item.customIcon === "blog" ? (
-                        <BlogIcon className="w-full h-full" />
-                      ) : item.customIcon === "medium" ? (
-                        <MediumIcon className="w-full h-full" />
-                      ) : item.customIcon === "github" ? (
-                        <GitHubIcon className="w-full h-full" />
-                      ) : null}
-                    </div>
-                    {/* Bottom label */}
-                    <div className="absolute bottom-1 left-0 right-0 text-center font-body text-[7px] text-ps2-menu-fg/70 font-bold uppercase tracking-wider">
-                      {item.id}
-                    </div>
+                {item.customIcon === "github" ? (
+                  <div className="relative w-28 h-28 flex items-center justify-center">
+                    <GitHubIcon className="w-full h-full" />
                   </div>
-                  {/* Side accent */}
-                  <div 
-                    className="absolute left-0 top-0 bottom-0 w-1.5 rounded-l-sm"
-                    style={{ background: `linear-gradient(to bottom, ${item.color}, ${item.color}66)` }}
-                  />
-                </div>
+                ) : (
+                  <div className="relative w-24 h-24">
+                    {/* Base card shape */}
+                    <div 
+                      className="absolute inset-0 rounded-sm shadow-lg overflow-hidden"
+                      style={{ 
+                        background: `linear-gradient(135deg, ${item.color}, ${item.color}88)`,
+                        transform: "rotateX(10deg)" 
+                      }}
+                    >
+                      {/* Icon centered */}
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        {item.customIcon === "cv" ? (
+                          <CVIcon className="w-full h-full" />
+                        ) : item.customIcon === "blog" ? (
+                          <BlogIcon className="w-full h-full" />
+                        ) : item.customIcon === "medium" ? (
+                          <MediumIcon className="w-full h-full" />
+                        ) : null}
+                      </div>
+                      {/* Bottom label */}
+                      <div className="absolute bottom-1 left-0 right-0 text-center font-body text-[7px] text-ps2-menu-fg/70 font-bold uppercase tracking-wider">
+                        {item.id}
+                      </div>
+                    </div>
+                    {/* Side accent */}
+                    <div 
+                      className="absolute left-0 top-0 bottom-0 w-1.5 rounded-l-sm"
+                      style={{ background: `linear-gradient(to bottom, ${item.color}, ${item.color}66)` }}
+                    />
+                  </div>
+                )}
                 
                 {/* Glow effect */}
                 {selectedIndex === index && (
