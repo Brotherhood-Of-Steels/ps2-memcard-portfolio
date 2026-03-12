@@ -100,6 +100,8 @@ const BrowsePage = () => {
                     <MediumIcon className="w-full h-full" />
                   ) : item.customIcon === "github" ? (
                     <GitHubIcon className="w-full h-full" />
+                  ) : item.customIcon === "portfolio" ? (
+                    <PortfolioIcon className="w-full h-full" />
                   ) : null}
                 </div>
                 
