@@ -1,10 +1,10 @@
 # 1) Build stage: Compile assets menggunakan Bun
-FROM oven/bun:1.1-alpine AS builder
+FROM oven/bun:1-alpine AS builder
 WORKDIR /app
 
 # Copy manifest untuk layer caching yang optimal
 COPY bun.lockb package.json ./
-RUN bun install --frozen-lockfile
+RUN bun install
 
 # Copy source code dan jalankan build
 COPY . .
