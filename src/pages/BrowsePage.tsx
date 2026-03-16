@@ -13,8 +13,11 @@ const browseItems = [
   { id: "blog", label: "My Blog", customIcon: "blog", color: "hsl(140, 70%, 55%)", action: "link", url: "https://damarowen.blog/blogs" },
   { id: "medium", label: "Medium", customIcon: "medium", color: "hsl(0, 0%, 90%)", action: "link", url: "https://medium.com/@damarowen" },
   { id: "github", label: "GitHub", customIcon: "github", color: "hsl(0, 0%, 10%)", action: "link", url: "https://github.com/damarowen" },
-  { id: "portfolio", label: "My Portofolio", customIcon: "portfolio", color: "hsl(220, 80%, 60%)", action: "link", url: "https://damarowen.github.io/myPortofolio/" },
+  { id: "portfolio", label: "My Portfolio", customIcon: "portfolio", color: "hsl(220, 80%, 60%)", action: "link", url: "https://damarowen.github.io/myPortofolio/" },
 ];
+
+// Grid column count used for vertical navigation via ArrowUp/ArrowDown
+const GRID_COLS = 3;
 
 const BrowsePage = () => {
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -38,12 +41,15 @@ const BrowsePage = () => {
     const handleKey = (e: KeyboardEvent) => {
       if (e.key === "ArrowLeft") setSelectedIndex((p) => (p - 1 + browseItems.length) % browseItems.length);
       if (e.key === "ArrowRight") setSelectedIndex((p) => (p + 1) % browseItems.length);
+      // Vertical navigation: move by number of columns
+      if (e.key === "ArrowUp") setSelectedIndex((p) => (p - GRID_COLS + browseItems.length) % browseItems.length);
+      if (e.key === "ArrowDown") setSelectedIndex((p) => (p + GRID_COLS) % browseItems.length);
       if (e.key === "Enter" || e.key === "x") handleEnter();
       if (e.key === "Escape" || e.key === "o") handleBack();
     };
     window.addEventListener("keydown", handleKey);
     return () => window.removeEventListener("keydown", handleKey);
-  });
+  }, [selectedIndex]);
 
   return (
     <main className="h-screen bg-ps2-gray flex flex-col" role="application" aria-label="Browse Memory Card">
