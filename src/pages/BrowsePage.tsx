@@ -58,7 +58,7 @@ const BrowsePage = () => {
         <nav className="font-body text-ps2-menu-fg text-sm tracking-wide flex items-center gap-2">
           <button onClick={handleBack} className="hover:text-primary transition-colors">Home</button>
           <span className="text-ps2-menu-fg/50">›</span>
-          <span className="font-bold">Browser</span>
+          <span className="font-bold">Browserr</span>
         </nav>
       </header>
 
