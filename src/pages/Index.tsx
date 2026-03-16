@@ -31,17 +31,31 @@ const Index = () => {
 
   useEffect(() => {
     const handleKey = (e: KeyboardEvent) => {
-      if (e.key === "ArrowUp") setSelectedIndex((p) => (p - 1 + menuItems.length) % menuItems.length);
-      if (e.key === "ArrowDown") setSelectedIndex((p) => (p + 1) % menuItems.length);
-      if (e.key === "Enter") handleEnter();
+      if (e.key === "ArrowUp") {
+        e.preventDefault();
+        e.stopPropagation();
+        setSelectedIndex((p) => (p - 1 + menuItems.length) % menuItems.length);
+        return;
+      }
+      if (e.key === "ArrowDown") {
+        e.preventDefault();
+        e.stopPropagation();
+        setSelectedIndex((p) => (p + 1) % menuItems.length);
+        return;
+      }
+      if (e.key === "Enter") {
+        e.preventDefault();
+        e.stopPropagation();
+        handleEnter();
+      }
     };
     window.addEventListener("keydown", handleKey);
     return () => window.removeEventListener("keydown", handleKey);
-  });
+  }, [selectedIndex]);
 
   return (
     <main
-      className="relative min-h-screen bg-background overflow-hidden flex flex-col"
+      className="relative min-h-screen bg-background overflow-hidden flex flex-col select-none focus:outline-none outline-none"
       role="application"
       aria-label="PS2 Menu">
       
@@ -62,7 +76,7 @@ const Index = () => {
       <div className="flex-1 flex items-center justify-center">
         <div className="relative flex items-center gap-6 md:gap-10">
           {/* Orbs — covers full area so they can pass over the menu */}
-          <div className="absolute inset-0 -left-20 -right-20 -top-20 -bottom-20 pointer-events-none z-10" style={{ transform: 'translateX(-90px)' }}>
+          <div className="absolute inset-0 -left-20 -right-20 -top-20 -bottom-20 pointer-events-none z-10" style={{ transform: 'translateX(-95px)' }}>
             <PS2Orbs />
           </div>
 

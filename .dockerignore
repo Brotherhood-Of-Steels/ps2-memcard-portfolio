@@ -1,0 +1,13 @@
+# Node/Vite build artifacts
+node_modules
+.DS_Store
+npm-debug.log*
+
+# Vite output
+/dist
+
+# Git & editor
+.git
+.github
+.vscode
+coverage

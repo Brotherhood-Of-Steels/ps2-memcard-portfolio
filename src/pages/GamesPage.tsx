@@ -29,7 +29,7 @@ const GamesPage = () => {
     };
     window.addEventListener("keydown", handleKey);
     return () => window.removeEventListener("keydown", handleKey);
-  });
+  }, [selectedIndex, playing]);
 
   if (playing) {
     return <SnakeGame onBack={() => setPlaying(false)} />;
