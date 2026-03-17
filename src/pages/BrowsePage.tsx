@@ -9,7 +9,14 @@ import PortfolioIcon from "@/components/PortfolioIcon";
 
 
 const browseItems = [
-  { id: "cv", label: "My CV", customIcon: "cv", color: "hsl(210, 80%, 65%)", action: "download-cv" },
+  {
+    id: "cv",
+    label: "My CV",
+    customIcon: "cv",
+    color: "hsl(210, 80%, 65%)",
+    action: "link",
+    url: "https://drive.google.com/file/d/1VP9Ep9BLpOV-gV3fEpMyK9rkP8WGeUyi/view?usp=drive_link",
+  },
   { id: "blog", label: "My Blog", customIcon: "blog", color: "hsl(140, 70%, 55%)", action: "link", url: "https://damarowen.blog/blogs" },
   { id: "medium", label: "Medium", customIcon: "medium", color: "hsl(0, 0%, 90%)", action: "link", url: "https://medium.com/@damarowen" },
   { id: "github", label: "GitHub", customIcon: "github", color: "hsl(0, 0%, 10%)", action: "link", url: "https://github.com/damarowen" },
@@ -33,7 +40,8 @@ const BrowsePage = () => {
       link.download = "CV.pdf";
       link.click();
     } else if (item.action === "link" && item.url) {
-      window.open(item.url, "_blank");
+      // Open external links securely to prevent reverse tabnabbing
+      window.open(item.url, "_blank", "noopener,noreferrer");
     }
   };
 
