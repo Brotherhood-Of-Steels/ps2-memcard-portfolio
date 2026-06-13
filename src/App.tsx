@@ -5,6 +5,8 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import BrowsePage from "./pages/BrowsePage";
+import CVPage from "./pages/CVPage";
+import CVEditPage from "./pages/CVEditPage";
 import GamesPage from "./pages/GamesPage";
 import NotFound from "./pages/NotFound";
 
@@ -19,6 +21,8 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/browse" element={<BrowsePage />} />
+          <Route path="/cv" element={<CVPage />} />
+          <Route path="/cv/edit" element={<CVEditPage />} />
           <Route path="/games" element={<GamesPage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>

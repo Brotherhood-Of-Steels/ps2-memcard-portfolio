@@ -14,8 +14,8 @@ const browseItems = [
     label: "My CV",
     customIcon: "cv",
     color: "hsl(210, 80%, 65%)",
-    action: "link",
-    url: "https://drive.google.com/file/d/1VP9Ep9BLpOV-gV3fEpMyK9rkP8WGeUyi/view?usp=drive_link",
+    action: "navigate",
+    url: "/cv",
   },
   { id: "blog", label: "My Blog", customIcon: "blog", color: "hsl(140, 70%, 55%)", action: "link", url: "https://damarowen.blog/blogs" },
   { id: "medium", label: "Medium", customIcon: "medium", color: "hsl(0, 0%, 90%)", action: "link", url: "https://medium.com/@damarowen" },
@@ -34,7 +34,9 @@ const BrowsePage = () => {
 
   const handleEnter = () => {
     const item = browseItems[selectedIndex];
-    if (item.action === "download-cv") {
+    if (item.action === "navigate" && item.url) {
+      navigate(item.url);
+    } else if (item.action === "download-cv") {
       const link = document.createElement("a");
       link.href = "/cv.pdf";
       link.download = "CV.pdf";
