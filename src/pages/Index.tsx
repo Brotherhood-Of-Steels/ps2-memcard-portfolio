@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import PS2Orbs from "@/components/PS2Orbs";
@@ -13,6 +13,9 @@ const Index = () => {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [enterFlash, setEnterFlash] = useState(false);
   const navigate = useNavigate();
+  const selectedIndexRef = useRef(selectedIndex);
+
+  selectedIndexRef.current = selectedIndex;
 
   const handleNavigate = (path: string) => {
     if (path.startsWith("http")) {
@@ -25,7 +28,7 @@ const Index = () => {
   const handleEnter = () => {
     setEnterFlash(true);
     setTimeout(() => {
-      handleNavigate(menuItems[selectedIndex].path);
+      handleNavigate(menuItems[selectedIndexRef.current].path);
     }, 300);
   };
 
@@ -90,9 +93,12 @@ const Index = () => {
               key={item.id}
               onClick={() => {
                 setSelectedIndex(index);
-                handleNavigate(item.path);
+                setEnterFlash(true);
+                setTimeout(() => {
+                  handleNavigate(menuItems[index].path);
+                }, 200);
               }}
-              className="text-left focus:outline-none py-0.5">
+              className="text-left focus:outline-none py-0.5 touch-manipulation">
               
                 <motion.span
                 className={`block font-body tracking-wider transition-all ${

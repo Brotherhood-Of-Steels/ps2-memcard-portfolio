@@ -140,7 +140,7 @@ const PS2Orbs = () => {
         onCreated={({ gl }) => {
           gl.setClearColor(0x000000, 0);
         }}
-        style={{ background: "transparent" }}
+        style={{ background: "transparent", pointerEvents: "none" }}
       >
         <OrbSystem />
       </Canvas>

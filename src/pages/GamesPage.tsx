@@ -54,9 +54,11 @@ const GamesPage = () => {
               key={item.id}
               onClick={() => {
                 setSelectedIndex(index);
-                handleEnter();
+                setTimeout(() => {
+                  setPlaying(true);
+                }, 200);
               }}
-              className="flex flex-col items-center gap-2 group focus:outline-none"
+              className="flex flex-col items-center gap-2 group focus:outline-none touch-manipulation"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.1 }}

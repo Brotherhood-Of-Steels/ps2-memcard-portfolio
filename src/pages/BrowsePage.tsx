@@ -80,9 +80,21 @@ const BrowsePage = () => {
               key={item.id}
               onClick={() => {
                 setSelectedIndex(index);
-                handleEnter();
+                setTimeout(() => {
+                  const item = browseItems[index];
+                  if (item.action === "navigate" && item.url) {
+                    navigate(item.url);
+                  } else if (item.action === "download-cv") {
+                    const link = document.createElement("a");
+                    link.href = "/cv.pdf";
+                    link.download = "CV.pdf";
+                    link.click();
+                  } else if (item.action === "link" && item.url) {
+                    window.open(item.url, "_blank", "noopener,noreferrer");
+                  }
+                }, 200);
               }}
-              className="flex flex-col items-center gap-2 group focus:outline-none"
+              className="flex flex-col items-center gap-2 group focus:outline-none touch-manipulation"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.1 }}
